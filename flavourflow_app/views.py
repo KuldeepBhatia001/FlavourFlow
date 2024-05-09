@@ -6,3 +6,7 @@ def userSignin(request):
 
 def userSignup(request):
     return render(request, "userSignup.html")
+
+
+def flavourflow_app(request):
+    return render(request, 'index.html')
