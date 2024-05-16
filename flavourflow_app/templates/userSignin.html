@@ -1,4 +1,7 @@
+
     {% extends 'base.html' %}
+     {% load static %}
+
     {% block title %}userSignup{% endblock %}
 
     {% block styles %}
@@ -86,7 +89,7 @@
     <div class="container">
         <div class="top-block">
             <div class="logo">
-                <img src="Logo.png" alt="Logo">
+                <img src="{% static 'media/Logo.png' %}" alt="Logo">
             </div>
         </div>
         <div class="block">
