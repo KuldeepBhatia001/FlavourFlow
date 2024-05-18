@@ -4,12 +4,14 @@ from django.contrib.auth.models import User
 class Restaurant(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='restaurant')
     name = models.CharField(max_length=500)
+    phone = models.CharField(max_length=10)
     address = models.CharField(max_length=500)
     abn = models.CharField(max_length=11, unique=True)
     category = models.CharField(max_length=255)
     logo = models.ImageField(upload_to='restaurant_logo/')
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer')
+    phone = models.CharField(max_length=10)
 class Address(models.Model):
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
