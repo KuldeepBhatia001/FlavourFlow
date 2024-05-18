@@ -1,8 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-
-class User(AbstractUser):
-    phone_number = models.CharField(max_length=15, blank=True)
+from django.contrib.auth.models import User
 
 class Restaurant(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='restaurant')
