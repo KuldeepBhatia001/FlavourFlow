@@ -1,11 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>This should be the main page i guess</h1>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Welcome Page{% endblock %}
+{% block styles %}<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <style>
+    .btn.btn-primary{
+        background-color:#fc8042;
+        border:none;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row p-5 mb-3">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body" style="text-align: center;">
+                    <h4 class="card-title">FlavorFlow for Restaurants</h4>
+                    <p class="card-text">Become a partner restaurant with us and widen your reach to our ever growing customer base.</p>
+                    <a href="{% url 'restSignup' %}" class="btn btn-primary" data-mdb-ripple-init>Get Started</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body" style="text-align: center;">
+                    <h4 class="card-title" style="text-align: center">FlavorFlow for Customers</h4>
+                    <p class="card-text">Streamline your culinary journey with us as we bring local kitchens to your doorstep.</p>
+                    <a href="#" class="btn btn-primary" data-mdb-ripple-init>Place your order now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
