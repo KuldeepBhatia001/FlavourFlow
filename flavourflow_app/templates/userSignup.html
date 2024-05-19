@@ -1,104 +1,9 @@
     {% extends 'base.html' %}
     {% load static %}
-    {% block title %}userSignup{% endblock %}
+    {% block title %}UserSignup{% endblock %}
 
-    {% block styles %}
-    <style>
-        nav{
-            background-color: #004656;
-        }
-        span{
-            color:white;
-        }
-        .btn.btn-primary.nav-link{
-            margin-left: 10px;
-            background-color: #001f26;
-            border-radius:18px;}
+    {% block styles %}<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">{% endblock %}
 
-        .nav-link.active{
-            color:white;
-            background-color: #fc8042;
-            border-radius: 18px;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #001F26;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .top-block {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            margin-bottom: 20px;
-            width: 430px;
-
-        }
-        .logo img {
-            width: 200px;
-            height: auto;
-        }
-        h1 {
-            margin: 0;
-        }
-        h2 {
-            font-family: 'Times New Roman', Times, serif;
-            color:#fff;
-            margin-bottom: 0%;
-
-        }
-        h6 {
-            color:#969BB0;
-            margin-top: 0%;
-            text-align: left;
-        }
-        p {
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-        label {
-            color: #969BB0;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #1E1E1E;
-            border-radius: 5px;
-            margin-bottom: 20px
-        }
-        .login-form button {
-            background-color: #FFA500; /* Orange color */
-            color: #fff;
-            cursor: pointer;
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #1E1E1E;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .form-group button:hover {
-            background-color: #0056b3;
-        }
-
-        input[type=checkbox] {
-            margin-right: 10px;
-            align-self: flex-start;
-            margin-bottom: 20px;
-            color: #969BB0;
-            font-size: smaller;
-        }
-    </style>
-    {% endblock %}
     {% block content %}
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class= "container-fluid">
@@ -129,7 +34,8 @@
             </div>
         </div>
         <div class="block">
-            <form class="login-form" action="i.html" method="post">
+            <form class="login-form" action="/userSignin" method="post">
+                {% csrf_token %}
                 <h2>Sign-up</h2>
                 <h6>Create an account to get started</h6>
                 <div class="form-group">
