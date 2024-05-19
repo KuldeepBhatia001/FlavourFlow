@@ -21,6 +21,8 @@ def restSignup_view(request):
         form = UserCreationForm()
     return render(request, "registration/restSignup.html", {'form': form})
 
+def restDashboard(request):
+    return render(request,"restDashboard.html")
 
 def flavourflow_app(request):
     return render(request, 'index.html')
