@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Restaurant Login{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% endblock %}
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class= "container-fluid">
+        <a class="navbar-logo" href="#"><img src="{% static 'media/navbarlogo.png'%}" height="40"></a>
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link d-flex justify-content-center align-items-center" href="#">
+                    <img src="{% static 'media/getsupport.png'%}" height="14"><span>Get Support</span>
+                </a>
+            </li>
+            <li>
+                <button class="nav-link active d-flex justify-content-center align-items-center" aria-current="page">
+                    <img src="{% static 'media/login.png' %}" height="14"><span>Login</span>
+                </button>
+            </li>
+            <li>
+                <a class="nav-link " href="{% url 'restSignup' %}"><span>Get Started</span></a>
+            </li>
+        </ul>
+    </div>
+</nav> <br/><br/>
+<div class="container-fluid d-flex h-100 flex-column">
+    <div class="row mb-3 flex-fill h-100 d-flex">
+        <div class="col-md-6 d-flex mh=100">
+            <div class="container">
+                <img class="img-fluid" src="{% static 'media/growbusiness.png' %}">
+                <br/>
+                <div class="row text-center fs-1" id="text"><b>Grow your business </b></div>
+                <div class="row text-center fs-1" id="text"><b>with FlavorFlow</b></div>
+                <div class="row text-center fs-1" id="cust"><a href="{% url 'userSignin' %}"><i><b> <span id="notR" style="font-size:12px; background-color: #004656; border-radius: 18px; padding:5px">Not a restaurant?</span></b></i></a></div>
+            </div>
+        </div>
+        </br>
+        <div class="col-md-4 d-flex h=100%" id="form">
+            <div class="container form-container h-100">
+                <form class="form-with-validation" action="{% url 'restDashboard' %}" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <h3>Sign in</h3><br/>
+                    <div class="mb-3">
+                        <input class="container-fluid" type="email" placeholder="Email address">
+                    </div>
+                    <div class="mb-3">
+                        <input class="container-fluid" type="password" placeholder="Password">
+                    </div>
+                    <div class="mb-3">
+                        <input type="checkbox">
+                        <label class="check-label">Keep me logged in</label>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
