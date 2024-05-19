@@ -7,6 +7,22 @@
     {% block styles %}
 
     <style>
+         nav{
+            background-color: #004656;
+        }
+        span{
+            color:white;
+        }
+        .btn.btn-primary.nav-link{
+            margin-left: 10px;
+            background-color: #001f26;
+            border-radius:18px;}
+
+        .nav-link.active{
+            color:white;
+            background-color: #fc8042;
+            border-radius: 18px;
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -86,6 +102,28 @@
 
 
     {% block content %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class= "container-fluid">
+            <a class="navbar-logo" href="#"><img src="{% static 'media/navbarlogo.png'%}" height="40"></a>
+            <ul class="nav justify-content-end">
+                <li class="nav-item ">
+                    <a class="nav-link d-flex justify-content-center align-items-center " href="#">
+                        <img src="{% static 'media/getsupport.png'%}" height="14" class="d-inline-block align-text-center"><span>Get Support</span>
+                    </a>
+                </li>
+                <li>
+                    <button class="nav-link active d-flex justify-content-center align-items-center " aria-current="page">
+                        <img src="{% static 'media/login.png' %}" height="14"><span>Login</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary nav-link" href="{% url 'restSignup' %}">
+                        <span>Add your restaurant</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
     <div class="container">
         <div class="top-block">
             <div class="logo">
