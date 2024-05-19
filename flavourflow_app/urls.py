@@ -8,4 +8,6 @@ urlpatterns = [
     path('restSignup/', views.restSignup_view, name='restSignup'),
     path('login/', views.login, name='login'),
     path('restDashboard/', views.restDashboard, name='restDashboard'),
+    path('membership/', views.membership, name='membership'),
+
 ]

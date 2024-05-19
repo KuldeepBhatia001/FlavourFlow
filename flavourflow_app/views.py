@@ -26,3 +26,7 @@ def restDashboard(request):
 
 def flavourflow_app(request):
     return render(request, 'index.html')
+
+
+def membership(request):
+    return render(request, 'membership.html')
