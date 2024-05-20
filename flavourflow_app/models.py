@@ -2,6 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+
+
+
+
 class Customer(models.Model):
     payment_method = models.CharField(max_length=50)
     is_member = models.BooleanField(default=False)
@@ -57,6 +61,7 @@ class Order(models.Model):
     cust_rating = models.DecimalField(max_digits=5, decimal_places=1)
     delivery = models.BooleanField(default=True)
 
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
@@ -79,6 +84,7 @@ class Transaction(models.Model):
     payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='pending')
     timestamp = models.DateTimeField(auto_now_add=True)
 
+
 class Analytics(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='monthly_analytics')
     month = models.DateField()  # Store the first day of the month
@@ -86,8 +92,10 @@ class Analytics(models.Model):
     cust_views = models.IntegerField(default=0)
     avg_ticket = models.DecimalField(max_digits=8, decimal_places=2)
     total_sales = models.IntegerField(default=0)
+
     class Meta:
         unique_together = ('restaurant', 'month')
+
 
 class Favourites(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
