@@ -1,5 +1,9 @@
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm;
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import *
 
 def userSignin(request):
     return render(request, "userSignin.html")
@@ -28,5 +32,3 @@ def flavourflow_app(request):
     return render(request, 'index.html')
 
 
-def membership(request):
-    return render(request, 'membership.html')
