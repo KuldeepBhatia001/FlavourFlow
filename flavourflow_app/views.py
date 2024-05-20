@@ -1,3 +1,6 @@
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm;
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import *
@@ -9,26 +12,23 @@ def userSignin(request):
 def userSignup(request):
     return render(request, "userSignup.html")
 
+def login(request):
+    return render(request, "registration/login.html")
+    
+def restSignup_view(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect ("restDashboard.html")
+    else:
+        form = UserCreationForm()
+    return render(request, "registration/restSignup.html", {'form': form})
+
+def restDashboard(request):
+    return render(request,"restDashboard.html")
 
 def flavourflow_app(request):
     return render(request, 'index.html')
 
 
-# Sanjit - need to implement login encapsulation
-def home(request):
-    restaurants = Restaurant.objects.all()
-    return render(request, 'home.html', {'restaurants': restaurants}) # change template name as required
-
-def restaurant_menu(request, restaurant_id):
-    restaurant = get_object_or_404(Restaurant, pk=restaurant_id)
-    menus = Menu.objects.filter(restaurant=restaurant, is_active=True)
-    return render(request, 'restaurant_menu.html', {'restaurant': restaurant, 'menus': menus}) # change template name
-
-# for menu editing
-def menu_view(request, menu_id):
-    menu = get_object_or_404(Menu, pk=menu_id)
-    menu_items = MenuItem.objects.filter(menu=menu, is_available=True)
-    return render(request, 'menu_view.html', {'menu': menu, 'menu_items': menu_items}) # change template name
-
-def order_track(request):
-    return render(request, 'order_track.html')

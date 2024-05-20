@@ -1,0 +1,82 @@
+
+body{
+    background-color: #001f26;
+    max-height: 95%;
+}
+nav{
+    background-color: #004656;
+}
+a{
+    color:white;
+    text-decoration: none;
+}
+a:hover{
+    color: white;
+    text-decoration: none;
+    cursor:pointer;
+}
+
+.nav-link.active{
+    color:white;
+    background-color: #fc8042;
+    border-radius: 18px;
+}
+.nav-link.active:hover{
+    color:white;
+}
+
+.navbar-logo{
+    margin-left:20px;
+}
+ul{
+    margin-right: 40px;
+}
+.col-5{
+    text-align: center;
+    color:white;
+}
+#form{
+    background-color: white;
+}
+#text{
+    color: white;
+}
+h1{
+    color: black;
+}
+.form-container{
+    padding: 50px;
+}
+button[type="submit"]{
+    padding: 8px 30px;
+    background-color: #fc8042;
+    color: white;
+    border-radius: 10px;
+    border:none;
+}
+
+option[disabled]{
+    color:grey;
+}
+input[type="checkbox"] {
+    accent-color: #fc8042;
+}
+p{
+    font-size: 12px;
+    font-weight: bold;
+}
+span{
+    color:white;
+
+}
+button#signout.nav-link{
+    background-color: #fc8042;
+    border-radius: 18px;
+}
+a#activepage.nav-link.active{
+    background-color: lightgray;
+    color:lightgray;
+}
+span#notR{
+    background-color: #fc8042;
+}

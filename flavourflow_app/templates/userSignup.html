@@ -1,91 +1,32 @@
     {% extends 'base.html' %}
     {% load static %}
-    {% block title %}userSignup{% endblock %}
+    {% block title %}UserSignup{% endblock %}
 
-    {% block styles %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #001F26;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .top-block {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            margin-bottom: 20px;
-            width: 430px;
-
-        }
-        .logo img {
-            width: 200px;
-            height: auto;
-        }
-        h1 {
-            margin: 0;
-        }
-        h2 {
-            font-family: 'Times New Roman', Times, serif;
-            color:#fff;
-            margin-bottom: 0%;
-
-        }
-        h6 {
-            color:#969BB0;
-            margin-top: 0%;
-            text-align: left;
-        }
-        p {
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-        label {
-            color: #969BB0;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #1E1E1E;
-            border-radius: 5px;
-            margin-bottom: 20px
-        }
-        .login-form button {
-            background-color: #FFA500; /* Orange color */
-            color: #fff;
-            cursor: pointer;
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #1E1E1E;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .form-group button:hover {
-            background-color: #0056b3;
-        }
-
-        input[type=checkbox] {
-            margin-right: 10px;
-            align-self: flex-start;
-            margin-bottom: 20px;
-            color: #969BB0;
-            font-size: smaller;
-        }
-    </style>
-    {% endblock %}
-
+    {% block styles %}<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">{% endblock %}
 
     {% block content %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class= "container-fluid">
+            <a class="navbar-logo" href="#"><img src="{% static 'media/navbarlogo.png'%}" height="40"></a>
+            <ul class="nav justify-content-end">
+                <li class="nav-item ">
+                    <a class="nav-link d-flex justify-content-center align-items-center " href="#">
+                        <img src="{% static 'media/getsupport.png'%}" height="14" class="d-inline-block align-text-center"><span>Get Support</span>
+                    </a>
+                </li>
+                <li>
+                    <button class="nav-link active d-flex justify-content-center align-items-center " aria-current="page">
+                        <img src="{% static 'media/login.png' %}" height="14"><span>Signup</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary nav-link" href="{% url 'restSignup' %}">
+                        <span>Add your restaurant</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
     <div class="container">
         <div class="top-block">
             <div class="logo">
@@ -93,7 +34,8 @@
             </div>
         </div>
         <div class="block">
-            <form class="login-form" action="i.html" method="post">
+            <form class="login-form" action="/userSignin" method="post">
+                {% csrf_token %}
                 <h2>Sign-up</h2>
                 <h6>Create an account to get started</h6>
                 <div class="form-group">
