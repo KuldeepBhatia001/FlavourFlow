@@ -3,8 +3,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm;
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+
+from .forms import PaymentForm
 from .models import *
 from django.contrib.auth import authenticate
+from django.shortcuts import render, redirect
+from .models import ShoppingCart
 
 
 def userSignin(request):
@@ -107,4 +111,19 @@ def checkoutOrder(request):
         'delivery_fee': 0.99,
         'service_fee': 2.60
     }
+
     return render(request, 'checkoutOrder.html', context)
+
+
+def checkoutPayment(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    form = PaymentForm()
+    if request.method == 'POST':
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+
+            return redirect('home')  # Redirect to a success page or similar
+
+    return render(request, 'checkoutPayment.html', {'form': form})
