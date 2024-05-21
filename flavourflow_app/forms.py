@@ -33,3 +33,15 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+
+
+class PaymentForm(forms.Form):
+    # Payment fields as previously defined
+    card_number = forms.CharField(max_length=16)
+    expiration_date = forms.CharField(max_length=5)
+    cvv = forms.CharField(max_length=3)
+
+class DeliveryForm(forms.ModelForm):
+    class Meta:
+        model = Delivery
+        fields = ['delivery_location', 'delivery_option']

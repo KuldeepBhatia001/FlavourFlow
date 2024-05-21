@@ -126,3 +126,11 @@ class Menu(models.Model):
 
     def __str__(self):
         return self.name
+
+class Delivery(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    delivery_location = models.CharField(max_length=255)
+    delivery_option = models.CharField(max_length=100)  # e.g., 'standard', 'priority'
+
+    def str(self):
+        return f"{self.user.username} - {self.delivery_option}"

@@ -1,14 +1,9 @@
 from django.contrib import messages, auth
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm;
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, authenticate;
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-
-from .forms import PaymentForm, DeliveryForm
+from .forms import *
 from .models import *
-from django.contrib.auth import authenticate
-from django.shortcuts import render, redirect
-from .models import ShoppingCart
 
 
 def userSignin(request):
