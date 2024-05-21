@@ -97,6 +97,8 @@ class Order(ItemList):
 
 class ShoppingCart(ItemList):
     total_price = models.DecimalField(max_digits=5, decimal_places=2)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='shopping_cart')
+
 
 # ------------------------------------------------------------------------------
 
