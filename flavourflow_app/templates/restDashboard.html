@@ -13,47 +13,54 @@
                     </a>
                 </li>
                 <li>
-                    <button class="nav-link" id="signout">
+                    <a class="nav-link" id="signout" href="{% url 'logout' %}" style="background-color: #fc8042;border-radius: 18px">
                         <span>Sign out</span>
-                    </button>
+                    </a>
                 </li>
             </ul>
         </div>
     </nav>
-
-    <div class="d-flex flex-column p-3 bg-light" style="width: 280px; min-height:93vh;">
-        <span style="color:black"><b>All stores</b></span>
-    <hr/>
-        <ul class="nav nav-pills flex-column">
-            <li class="nav-item">
-                <a href="#" class="nav-link active" aria-current="page" id="activepage">
-                    <img class="bi me-2" width="16" height="16" src="{% static 'media/home.png' %}">
-                    <span style="color:black">Home</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link link-dark">
-                    <img class="bi me-2" width="16" height="16" src="{% static 'media/menu.png' %}">
-                    Menu
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link link-dark">
-                    <img class="bi me-2" width="16" height="16" src="{% static 'media/orders.png' %}">
-                    Orders
-                </a>
-            </li>
-            <li>
-                <a href="#" class="nav-link link-dark">
-                    <img class="bi me-2" width="16" height="16" src="{% static 'media/performance.png' %}">
-                    Performance
-                </a>
-            </li>
-        </ul>
-        <hr/>
-        <div class="settings" style="position:absolute;bottom:0">
-            <img width="18" height="18" src="{% static 'media/setting.png' %}">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="d-flex flex-column p-3 bg-light" style="width: 280px; min-height:93vh;">
+                <span style="color:black"><b>All stores</b></span>
+                <hr/>
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" aria-current="page" id="activepage">
+                            <img class="bi me-2" width="16" height="16" src="{% static 'media/home.png' %}">
+                            <span style="color:black">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'restMenu' %}" class="nav-link link-dark">
+                            <img class="bi me-2" width="16" height="16" src="{% static 'media/menu.png' %}">
+                            Menu
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'restOrders'%}" class="nav-link link-dark">
+                            <img class="bi me-2" width="16" height="16" src="{% static 'media/orders.png' %}">
+                            <span style="color:black">Orders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'restPerformance' %}" class="nav-link link-dark">
+                            <img class="bi me-2" width="16" height="16" src="{% static 'media/performance.png' %}">
+                            Performance
+                        </a>
+                    </li>
+                </ul>
+                <hr/>
+                <div class="settings" style="position:absolute;bottom:0">
+                    <img width="18" height="18" src="{% static 'media/setting.png' %}">
+                </div>
+            </div>
+            <div class="col-9 p-4" style="min-height:93vh;">
+                <h1>Hello, {% if user.is_authenticated %}{{ restaurant_name }}{% else %}valued Restaurant{% endif %}!</h1>
+                <img src="{% static 'media/star.png' %}" alt="rating_star" style="height:20px"> <span style="color:white"> 4.1</span><br/><br/>
+                <img src="{% static 'media/saleshome.png' %}" style="max-height: 500px; margin-left: 5px">
+            </div>
         </div>
     </div>
-
 {% endblock %}
