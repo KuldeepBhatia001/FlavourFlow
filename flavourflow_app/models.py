@@ -56,7 +56,6 @@ class Meal(models.Model):
 
 # -------------------------------------------------------------------------------
 
-
 class ItemList(models.Model):
     items = models.JSONField(default=dict)
 
@@ -76,14 +75,15 @@ class ItemList(models.Model):
         return list(self.items.items())
 
 
-class Menu(ItemList):
+class Menu(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
+    item_list = models.OneToOneField(ItemList, on_delete=models.CASCADE)
 
 
-class Order(ItemList):
+class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_orders')
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
@@ -93,12 +93,12 @@ class Order(ItemList):
     prepared_at = models.DateTimeField(blank=True, null=True)
     cust_rating = models.DecimalField(max_digits=5, decimal_places=1)
     delivery = models.BooleanField(default=True)
-
+    item_list = models.OneToOneField(ItemList, on_delete=models.CASCADE)
     # for ease of transfer from shopping cart to order
 
     def transfer_from_shopping_cart(self, shopping_cart):
         for item_id, quantity in shopping_cart.get_items():
-            self.add_item(item_id, quantity)
+            self.item_list.add_item(item_id, quantity)
 
         # Clear the shopping cart
         shopping_cart.items = {}
@@ -110,15 +110,16 @@ class Order(ItemList):
 
     def calculate_total_price(self):
         total = 0
-        for item_id, quantity in self.get_items():
+        for item_id, quantity in self.item_list.get_items():
             price_per_item = 10  # Replace with actual price lookup
             total += price_per_item * quantity
         self.total_price = total
 
 
-class ShoppingCart(ItemList):
+class ShoppingCart(models.Model):
     total_price = models.DecimalField(max_digits=5, decimal_places=2)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='shopping_cart')
+    item_list = models.OneToOneField(ItemList, on_delete=models.CASCADE)
 
 
 # ------------------------------------------------------------------------------
