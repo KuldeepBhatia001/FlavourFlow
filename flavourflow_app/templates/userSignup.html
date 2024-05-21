@@ -1,66 +1,76 @@
-    {% extends 'base.html' %}
-    {% load static %}
-    {% block title %}UserSignup{% endblock %}
+{% extends 'base.html' %}
+{% load static %}
 
-    {% block styles %}<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">{% endblock %}
+{% block title %}UserSignup{% endblock %}
 
-    {% block content %}
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class= "container-fluid">
-            <a class="navbar-logo" href="#"><img src="{% static 'media/navbarlogo.png'%}" height="40"></a>
-            <ul class="nav justify-content-end">
-                <li class="nav-item ">
-                    <a class="nav-link d-flex justify-content-center align-items-center " href="#">
-                        <img src="{% static 'media/getsupport.png'%}" height="14" class="d-inline-block align-text-center"><span>Get Support</span>
-                    </a>
-                </li>
-                <li>
-                    <button class="nav-link active d-flex justify-content-center align-items-center " aria-current="page">
-                        <img src="{% static 'media/login.png' %}" height="14"><span>Signup</span>
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-primary nav-link" href="{% url 'restSignup' %}">
-                        <span>Add your restaurant</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container">
-        <div class="top-block">
-            <div class="logo">
-                <img src="{% static 'media/Logo.png' %}" alt="Logo">
-            </div>
-        </div>
-        <div class="block">
-            <form class="login-form" action="/userSignin" method="post">
-                {% csrf_token %}
-                <h2>Sign-up</h2>
-                <h6>Create an account to get started</h6>
-                <div class="form-group">
-                    <label for="username">Name</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="example:John" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="name@email.com" required>
-                    <div class="error-message" id="email-error"></div>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Create a Password" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
-                    <div class="error-message" id="password-error"></div>
-                </div>
-                <div class="block">
-                    <input type="checkbox" id="agree" name="agree" required>
-                    <label for="agree">I've read and agree with the <a href="#">Terms and Conditions</a> and the <a href="#">Privacy Policy</a></label>
-                </div>
-                <button type="submit">Sign-up</button>
-              </form>
+{% block styles %}<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-logo" href="#"><img src="{% static 'media/navbarlogo.png' %}" height="40"></a>
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link d-flex justify-content-center align-items-center" href="#">
+                    <img src="{% static 'media/getsupport.png' %}" height="14" class="d-inline-block align-text-center">
+                    <span>Get Support</span>
+                </a>
+            </li>
+            <li>
+                <button class="nav-link active d-flex justify-content-center align-items-center" aria-current="page">
+                    <img src="{% static 'media/login.png' %}" height="14" alt="som">
+                    <span>Signup</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-primary nav-link" href="{% url 'restSignup' %}">
+                    <span>Add your restaurant</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="top-block">
+        <div class="logo">
+            <img src="{% static 'media/Logo.png' %}" alt="Logo">
         </div>
     </div>
-    {% endblock %}
+    <div class="block">
+        <form class="login-form" method="post">
+            {% csrf_token %}
+            <h2>Sign-up</h2>
+            <h6>Create an account to get started</h6>
+            {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="form-group">
+                <label for="username">Name</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="example:John" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="name@email.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password1">Password</label>
+                <input type="password" id="password1" name="password1" placeholder="Create a Password" required>
+            </div>
+            <div class="form-group">
+                <label for="password2">Confirm Password</label>
+                <input type="password" id="password2" name="password2" placeholder="Confirm Password" required>
+            </div>
+            <div class="block">
+                <input type="checkbox" id="agree" name="agree" required>
+                <label for="agree">I've read and agree with the <a href="#">Terms and Conditions</a> and the <a href="#">Privacy Policy</a></label>
+            </div>
+            <button type="submit">Sign-up</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

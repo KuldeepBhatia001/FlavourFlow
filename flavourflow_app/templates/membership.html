@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Membership{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/membership.css' %}">
+
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class= "container-fluid">
+        <a class="navbar-logo " href="#"><img src="{% static 'media/navbarlogo.png' %}" height="40"></a>
+
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link d-flex justify-content-center align-items-center" href="#">
+                    <img src="{% static 'media/getsupport.png'%}" height="14"><span>Get Support</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link d-flex justify-content-center align-items-center" href="{% url 'login' %}">
+                    <img src="{% static 'media/login.png' %}" height="14"><span>Login</span>
+                </a>
+            </li>
+            <li>
+                <button class="nav-link active" aria-current="page">Get Started</button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container text-center py-5">
+    <h1 class="display-5">Membership</h1>
+    <p class="lead">Start saving now on FlavourFlow with an FlavourFlow One membership</p>
+</div>
+
+<div class="container text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Free</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="my-0 font-weight-normal">$0 <small class="text-muted">/mo</small></h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Get $0 delivery fees on orders over $30.</li>
+                        <li>Access deals and discounts from participating restaurants.</li>
+                        <li>Enjoy real-time tracking of your orders.</li>
+                        <li>Priority customer support to resolve your issues quickly.</li>
+                    </ul>
+                    <button class="btn btn-outline-primary btn-lg btn-block">Chosen</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4>FlavourFlow One</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="my-0 font-weight-normal">$15 <small class="text-muted">/mo</small></h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Get $0 delivery fees on orders over $10.</li>
+                        <li>More exclusive deals and discounts from a wider range of restaurants.</li>
+                        <li>Priority delivery from select restaurants.</li>
+                        <li>No additional fees on small orders.</li>
+                    </ul>
+                    <form method="post" action="{% url 'payments' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">Choose Plan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

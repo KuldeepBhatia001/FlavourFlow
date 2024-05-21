@@ -107,11 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-# TIME_ZONE = 'AEST'
-
+TIME_ZONE = 'Australia/Sydney'  # or any valid time zone
 USE_I18N = True
 
-TIME_ZONE = 'Australia/Sydney'  # or any valid time zone
 USE_TZ = True
 
 

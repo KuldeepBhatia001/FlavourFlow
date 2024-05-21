@@ -10,5 +10,9 @@ urlpatterns = [
     path('restDashboard/', views.restDashboard, name='restDashboard'),
     # path('membership/', views.membership, name='membership'),
     path('dashboard/', views.user_dashboard, name='dashboard')
+    path('membership/', views.membership, name='membership'),
+    path('home/', views.home, name='home'),
+    path('payments/', views.payments, name='payments'),
+
 
 ]
