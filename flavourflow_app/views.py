@@ -91,3 +91,20 @@ def payments(request):
         return render(request, 'payments.html')
 
     return redirect('payments')
+
+
+def checkoutOrder(request):
+    if not request.user.is_authenticated:
+        return redirect('login')  # Ensure the user is logged in
+
+    try:
+        cart = ShoppingCart.objects.get(user=request.user)
+    except ShoppingCart.DoesNotExist:
+        cart = None  # Handle empty cart scenario appropriately
+
+    context = {
+        'cart': cart,
+        'delivery_fee': 0.99,
+        'service_fee': 2.60
+    }
+    return render(request, 'checkoutOrder.html', context)
