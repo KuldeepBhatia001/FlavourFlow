@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import User, Restaurant, Customer, Address, Menu, MenuItem, Order, OrderItem, Payment
+from .models import User, Restaurant, Customer, Menu, MenuItem, Order, OrderItem, Payment, Delivery
 
 
 class UserForm(forms.ModelForm):
@@ -45,3 +45,9 @@ class PaymentForm(forms.Form):
     card_number = forms.CharField(label='Card Number', max_length=16)
     expiration_date = forms.CharField(label='Expiration Date', max_length=5)
     cvv = forms.CharField(label='CVV', max_length=3)
+
+
+class DeliveryForm(forms.ModelForm):
+    class Meta:
+        model = Delivery
+        fields = ['delivery_location', 'delivery_option']

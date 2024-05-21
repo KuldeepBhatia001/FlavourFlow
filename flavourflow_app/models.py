@@ -54,6 +54,7 @@ class Meal(models.Model):
     image = models.ImageField(upload_to='meal_images/', blank=True, null=True)
     is_available = models.BooleanField(default=True)
 
+
 # -------------------------------------------------------------------------------
 
 
@@ -148,3 +149,12 @@ class Analytics(models.Model):
 
     class Meta:
         unique_together = ('restaurant', 'month')
+
+
+class Delivery(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    delivery_location = models.CharField(max_length=255)
+    delivery_option = models.CharField(max_length=100)  # e.g., 'standard', 'priority'
+
+    def __str__(self):
+        return f"{self.user.username} - {self.delivery_option}"

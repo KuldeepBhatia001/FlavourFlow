@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm;
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from .forms import PaymentForm
+from .forms import PaymentForm, DeliveryForm
 from .models import *
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
@@ -99,16 +99,17 @@ def payments(request):
 
 def checkoutOrder(request):
     if not request.user.is_authenticated:
-        return redirect('login')  # Ensure the user is logged in
+        return redirect('login')
 
     try:
         cart = ShoppingCart.objects.get(user=request.user)
-    except ShoppingCart.DoesNotExist:
-        cart = None  # Handle empty cart scenario appropriately
+        delivery = Delivery.objects.get(user=request.user)  # Get the most recent delivery info
+    except (ShoppingCart.DoesNotExist, Delivery.DoesNotExist):
+        return redirect('error_page')  # Redirect to an appropriate error page
 
     context = {
         'cart': cart,
-        'delivery_fee': 0.99,
+        'delivery': delivery,
         'service_fee': 2.60
     }
 
@@ -116,14 +117,4 @@ def checkoutOrder(request):
 
 
 def checkoutPayment(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-
-    form = PaymentForm()
-    if request.method == 'POST':
-        form = PaymentForm(request.POST)
-        if form.is_valid():
-
-            return redirect('home')  # Redirect to a success page or similar
-
-    return render(request, 'checkoutPayment.html', {'form': form})
+    return render(request, 'checkoutPayment.html')
