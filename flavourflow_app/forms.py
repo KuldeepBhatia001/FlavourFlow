@@ -3,6 +3,10 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .models import *
 
+class RestLoginForm(forms.Form):
+    email=forms.EmailField()
+    password=forms.CharField(widget=forms.PasswordInput)
+
 class UserForm(forms.ModelForm):
     email = forms.CharField(max_length=100, required=True)
 
