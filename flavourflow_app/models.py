@@ -1,25 +1,38 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-
-
-
+import json
 
 
 class Customer(models.Model):
-    payment_method = models.CharField(max_length=50)
-    is_member = models.BooleanField(default=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer')
     phone = models.CharField(max_length=10)
+    payment_method = models.CharField(max_length=50)
+    is_member = models.BooleanField(default=False)
 
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=50)
     postcode = models.CharField(max_length=4)
 
+    favourites = models.JSONField(default=list)
+
+    def add_fav(self, restaurant_id):
+        if restaurant_id not in self.favourites:
+            self.favourites.append(restaurant_id)
+        self.save()
+
+    def remove_fav(self, restaurant_id):
+        if restaurant_id in self.favourites:
+            self.favourites.remove(restaurant_id)
+            self.save()
+
+    def get_fav(self):
+        return self.favourites  # returns array I think
+
 
 class Restaurant(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='restaurant')
+
     name = models.CharField(max_length=500)
     phone = models.CharField(max_length=10)
     abn = models.CharField(max_length=11, unique=True)
@@ -32,25 +45,45 @@ class Restaurant(models.Model):
     postcode = models.CharField(max_length=4)
 
 
-class Menu(models.Model):
+class Meal(models.Model):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+    image = models.ImageField(upload_to='meal_images/', blank=True, null=True)
+    is_available = models.BooleanField(default=True)
+
+# -------------------------------------------------------------------------------
+
+
+class ItemList(models.Model):
+    items = models.JSONField(default=dict)
+
+    def add_item(self, item_id, quantity):
+        if item_id in self.items:
+            self.items[item_id] += quantity
+        else:
+            self.items[item_id] = quantity
+        self.save()
+
+    def remove_item(self, item_id):
+        if item_id in self.items:
+            del self.items[item_id]
+            self.save()
+
+    def get_items(self):
+        return list(self.items.items())
+
+
+class Menu(ItemList):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
 
 
-class MenuItem(models.Model):
-    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
-    image = models.ImageField(upload_to='menu_item_images/', blank=True, null=True)
-    is_available = models.BooleanField(default=True)
-
-
-class Order(models.Model):
+class Order(ItemList):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_orders')
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
@@ -61,14 +94,34 @@ class Order(models.Model):
     cust_rating = models.DecimalField(max_digits=5, decimal_places=1)
     delivery = models.BooleanField(default=True)
 
+    # for ease of transfer from shopping cart to order
 
-class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    def transfer_from_shopping_cart(self, shopping_cart):
+        for item_id, quantity in shopping_cart.get_items():
+            self.add_item(item_id, quantity)
 
-    quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
-    notes = models.CharField(max_length=255)
+        # Clear the shopping cart
+        shopping_cart.items = {}
+        shopping_cart.save()
+
+        # Calculate and update the order's total price
+        self.calculate_total_price()
+        self.save()
+
+    def calculate_total_price(self):
+        total = 0
+        for item_id, quantity in self.get_items():
+            price_per_item = 10  # Replace with actual price lookup
+            total += price_per_item * quantity
+        self.total_price = total
+
+
+class ShoppingCart(ItemList):
+    total_price = models.DecimalField(max_digits=5, decimal_places=2)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='shopping_cart')
+
+
+# ------------------------------------------------------------------------------
 
 
 class Transaction(models.Model):
@@ -95,8 +148,3 @@ class Analytics(models.Model):
 
     class Meta:
         unique_together = ('restaurant', 'month')
-
-
-class Favourites(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    order = models.OneToOneField(Restaurant, on_delete=models.CASCADE)
