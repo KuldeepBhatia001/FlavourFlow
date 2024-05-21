@@ -12,6 +12,14 @@ class MenuForm(forms.ModelForm):
         model = Menu
         exclude = ("restaurant",)
 
+
+class SignUpForm(UserCreationForm):
+    email = forms.EmailField(required=True, help_text="Enter a valid email address")
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
+
 # class UserForm(forms.ModelForm):
 #     email = forms.CharField(max_length=100, required=True)
 #     password = forms.CharField(widget=forms.PasswordInput())

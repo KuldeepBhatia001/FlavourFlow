@@ -1,35 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'base_old.html' %}
 {% load static %}
 
 {% block title %}UserSignup{% endblock %}
 
-{% block styles %}<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
+{% endblock %}
 
 {% block content %}
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-logo" href="#"><img src="{% static 'media/navbarlogo.png' %}" height="40"></a>
-        <ul class="nav justify-content-end">
-            <li class="nav-item">
-                <a class="nav-link d-flex justify-content-center align-items-center" href="#">
-                    <img src="{% static 'media/getsupport.png' %}" height="14" class="d-inline-block align-text-center">
-                    <span>Get Support</span>
-                </a>
-            </li>
-            <li>
-                <button class="nav-link active d-flex justify-content-center align-items-center" aria-current="page">
-                    <img src="{% static 'media/login.png' %}" height="14" alt="som">
-                    <span>Signup</span>
-                </button>
-            </li>
-            <li class="nav-item">
-                <a class="btn btn-primary nav-link" href="{% url 'restSignup' %}">
-                    <span>Add your restaurant</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
 <div class="container">
     <div class="top-block">
         <div class="logo">
@@ -48,29 +26,14 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            <div class="form-group">
-                <label for="username">Name</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="example:John" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="name@email.com" required>
-            </div>
-            <div class="form-group">
-                <label for="password1">Password</label>
-                <input type="password" id="password1" name="password1" placeholder="Create a Password" required>
-            </div>
-            <div class="form-group">
-                <label for="password2">Confirm Password</label>
-                <input type="password" id="password2" name="password2" placeholder="Confirm Password" required>
-            </div>
+            {{ form.as_p }}
             <div class="block">
                 <input type="checkbox" id="agree" name="agree" required>
                 <label for="agree">I've read and agree with the <a href="#">Terms and Conditions</a> and the <a href="#">Privacy Policy</a></label>
             </div>
             <button type="submit">Sign-up</button>
         </form>
+        <p>Are a member? <a href="{% url 'userSignin' %}">Sign in</a></p>
     </div>
 </div>
 {% endblock %}
-

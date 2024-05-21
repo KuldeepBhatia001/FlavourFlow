@@ -29,29 +29,18 @@ def userSignin(request):
 
 def userSignup(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-
-        if password1 == password2:
-            if User.objects.filter(username=username).exists():
-                messages.error(request, 'Username is already taken')
-                return redirect('userSignup')
-            elif User.objects.filter(email=email).exists():
-                messages.error(request, 'Email is already registered')
-                return redirect('userSignup')
-            else:
-                user = User.objects.create_user(username=username, email=email, password=password1)
-                user.save()
-                auth.login(request, user)
-                messages.success(request, 'You are now logged in')
-                return redirect('home')
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request)
+            messages.success(request, 'Registration successful')
+            return redirect('userSignin')  # Redirect to home or another appropriate page
         else:
-            messages.error(request, 'Passwords do not match')
-            return redirect('userSignup')
+            messages.error(request, 'Please correct the error below.')
     else:
-        return render(request, "userSignup.html")
+        form = SignUpForm()
+
+    return render(request, 'userSignup.html', {'form': form})
 
 
 def login(request):
@@ -76,9 +65,11 @@ def restDashboard(request):
 def flavourflow_app(request):
     return render(request, 'index.html')
 
+
 # @userSignin
 def user_dashboard(request):
     return render(request, 'user/dashboard.html')
+
 
 # def membership(request):
 #     pass
@@ -86,6 +77,7 @@ def membership(request):
     return render(request, 'membership.html')
 
 
+@login_required
 def home(request):
     return render(request, 'home.html')
 
@@ -98,23 +90,13 @@ def payments(request):
 
 
 def checkoutOrder(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
 
-    try:
-        cart = ShoppingCart.objects.get(user=request.user)
-        delivery = Delivery.objects.get(user=request.user)  # Get the most recent delivery info
-    except (ShoppingCart.DoesNotExist, Delivery.DoesNotExist):
-        return redirect('error_page')  # Redirect to an appropriate error page
-
-    context = {
-        'cart': cart,
-        'delivery': delivery,
-        'service_fee': 2.60
-    }
-
-    return render(request, 'checkoutOrder.html', context)
+    return render(request, 'checkoutOrder.html')
 
 
 def checkoutPayment(request):
     return render(request, 'checkoutPayment.html')
+
+
+def orderTracking(request):
+    return render(request, 'orderTracking.html')

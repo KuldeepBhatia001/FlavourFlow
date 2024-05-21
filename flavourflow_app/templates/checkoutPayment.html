@@ -30,7 +30,7 @@
 </nav>
     <div class="container mt-5">
     <h2>Checkout Details</h2>
-    <form method="post" action="{% url 'checkoutOrder' %}">
+    <form method="POST" action="{% url 'checkoutOrder' %}">
         {% csrf_token %}
 
         <!-- Delivery Location -->
