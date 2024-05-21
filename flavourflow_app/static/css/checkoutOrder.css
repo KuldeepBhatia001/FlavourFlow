@@ -1,0 +1,82 @@
+body {
+   background-color: #001f26;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+nav{
+    background-color: #004656;
+}
+.nav-link.active{
+    color:white;
+    background-color: #fc8042;
+    border-radius: 18px;
+}
+.nav-link.active:hover{
+    color:white;
+}
+
+.navbar-logo{
+    margin-left:20px;
+}
+
+#form {
+    width: 100%;
+    max-width: 550px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-container input::placeholder {
+    color: #aaa;
+}
+
+.logo-img {
+            max-height: 700px;  /* Adjust based on your needs */
+        }
+.card-container {
+            background-color: #001f26;
+
+            padding: 80px;              /* Padding inside the card */
+            margin-top: 30px;
+            color: white;
+        }
+.total-line {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+.right-align {
+        text-align: right;
+
+    }
+.value {
+        float: right;
+        clear: both;  /* Ensures the value aligns right regardless of preceding content */
+        color: orange;
+    }
+
+.centered-button {
+        display: block;  /* Makes the button a block-level element */
+        width: 20%;      /* Sets the width of the button to 50% of its container */
+        margin: 20px auto; /* Vertically spaces the button and centers it horizontally */
+        background-color: #dc7c33; /* Bootstrap primary color, change as needed */
+        color: white;    /* Text color for the button */
+        border: none;    /* Removes the border */
+    }
