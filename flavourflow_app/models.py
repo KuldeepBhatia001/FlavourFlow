@@ -94,6 +94,27 @@ class Order(ItemList):
     cust_rating = models.DecimalField(max_digits=5, decimal_places=1)
     delivery = models.BooleanField(default=True)
 
+    # for ease of transfer from shopping cart to order
+
+    def transfer_from_shopping_cart(self, shopping_cart):
+        for item_id, quantity in shopping_cart.get_items():
+            self.add_item(item_id, quantity)
+
+        # Clear the shopping cart
+        shopping_cart.items = {}
+        shopping_cart.save()
+
+        # Calculate and update the order's total price
+        self.calculate_total_price()
+        self.save()
+
+    def calculate_total_price(self):
+        total = 0
+        for item_id, quantity in self.get_items():
+            price_per_item = 10  # Replace with actual price lookup
+            total += price_per_item * quantity
+        self.total_price = total
+
 
 class ShoppingCart(ItemList):
     total_price = models.DecimalField(max_digits=5, decimal_places=2)
