@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+
 from .models import User, Restaurant, Customer, Address, Menu, MenuItem,  Order, OrderItem, Payment
 
 class UserForm(forms.ModelForm):
@@ -25,3 +27,10 @@ class MenuForm(forms.ModelForm):
     class Meta:
         model = MenuItem
         exclude = ("restaurant",)
+
+class UserRegisterForm(UserCreationForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']

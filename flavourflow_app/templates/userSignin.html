@@ -1,112 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
 
-    {% extends 'base.html' %}
-     {% load static %}
+{% block title %}userSignin{% endblock %}
 
-    {% block title %}userSignup{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
+{% endblock %}
 
-    {% block styles %}
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #001F26;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .top-block {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            margin-bottom: 20px;
-            width: 430px;
-
-
-
-        }
-        .logo img {
-            width: 200px;
-            height: auto;
-        }
-        h1 {
-            margin: 0;
-        }
-        h2 {
-            font-family: 'Times New Roman', Times, serif;
-            color:#fff;
-            margin-bottom: 30px;
-
-        }
-        p {
-            margin-top: 5px;
-            margin-bottom: 10px;
-            color: #CBD1E9;
-            font-size:small ;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #1E1E1E;
-            border-radius: 5px;
-            margin-bottom: 10px
-        }
-        .login-form button {
-            background-color: #FFA500; /* Orange color */
-            color: #fff;
-            cursor: pointer;
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #1E1E1E;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .form-group button:hover {
-            background-color: #0056b3;
-        }
-        input[type=email], input[type=password] {
-                border: 1px solid #ccc;
-                padding: 10px;
-                font-size: 16px;
-                width: 100%;
-                box-sizing: border-box;
-                margin-bottom: 5px;
-                margin-top: 5px;
-  }
-    </style>
-    {% endblock %}
-
-
-    {% block content %}
-    <div class="container">
-        <div class="top-block">
-            <div class="logo">
-                <img src="{% static 'media/Logo.png' %}" alt="Logo">
-            </div>
-        </div>
-        <div class="block">
-            <form class="login-form" action="home.html" method="post">
-                <h2>Sign-in</h2>
-                <div class="form-group">
-                    <input type="email" id="email" name="email" placeholder="Email" required>
-                    <div class="error-message" id="email-error"></div>
-                  </div>
-                  <div class="form-group">
-                    <input type="password" id="password" name="password" placeholder="Password" required>
-                    <div class="error-message" id="password-error"></div>
-                  </div>
-                  <p><a href="#" style="color: darkorange;">forgot password?</a></p>
-                <button type="submit">Login</button>
-              </form>
-            <p>Not a member? <a href="userSignup.html">Register now</a></p>
+{% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-logo" href="#"><img src="{% static 'media/navbarlogo.png' %}" height="40"></a>
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+                <a class="nav-link d-flex justify-content-center align-items-center" href="#">
+                    <img src="{% static 'media/getsupport.png' %}" height="14" class="d-inline-block align-text-center">
+                    <span>Get Support</span>
+                </a>
+            </li>
+            <li>
+                <button class="nav-link active d-flex justify-content-center align-items-center" aria-current="page">
+                    <img src="{% static 'media/login.png' %}" height="14">
+                    <span>Login</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-primary nav-link" href="{% url 'restSignup' %}">
+                    <span>Add your restaurant</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="top-block">
+        <div class="logo">
+            <img src="{% static 'media/Logo.png' %}" alt="Logo">
         </div>
     </div>
-    {% endblock %}
+    <div class="block">
+        <form class="login-form" method="post">
+            {% csrf_token %}
+            <h2>Sign-in</h2>
+            {{ form.as_p }}
+            <p><a href="#" style="color: darkorange;">Forgot password?</a></p>
+            <button type="submit">Login</button>
+        </form>
+        <p>Not a member? <a href="{% url 'userSignup' %}">Register now</a></p>
+    </div>
+</div>
+{% endblock %}
+

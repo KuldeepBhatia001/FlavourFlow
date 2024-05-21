@@ -1,0 +1,73 @@
+body {
+   background-color: #001f26;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+nav{
+    background-color: #004656;
+}
+.nav-link.active{
+    color:white;
+    background-color: #fc8042;
+    border-radius: 18px;
+}
+.nav-link.active:hover{
+    color:white;
+}
+
+.navbar-logo{
+    margin-left:20px;
+}
+
+#form {
+    width: 100%;
+    max-width: 550px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-container input::placeholder {
+    color: #aaa;
+}
+
+.submit-row {
+    text-align: center;
+}
+
+.submit-row button {
+    width: 100%;
+    padding: 10px;
+    background-color: #dc7c33;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.submit-row button:hover {
+    background-color: #ff6a00;
+}
+
+.logo-img {
+    max-width: 650px; /* Set the maximum width */
+    max-height: 650px; /* Set the maximum height */
+}
