@@ -6,106 +6,107 @@
 {% endblock %}
 
 {%  block content %}
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class= "container-fluid">
-        <a class="navbar-logo" href="#"><img src="{% static 'media/navbarlogo.png' %}" height="40"></a>
-        <ul class="nav justify-content-end">
-            <li class="nav-item">
-                <a class="nav-link d-flex justify-content-center align-items-center" href="#">
-                    <img src="{% static 'media/getsupport.png'%}" height="14"><span>Get Support</span>
-                </a>
-            </li>
-            <li>
-                <a class="nav-link d-flex justify-content-center align-items-center" href="{% url 'login' %}">
-                    <img src="{% static 'media/login.png' %}" height="14"><span>Login</span>
-                </a>
-            </li>
-            <li>
-                <button class="nav-link active" aria-current="page">Get Started</button>
-            </li>
-        </ul>
-    </div>
-</nav>
-<div class="container-fluid">
-    <div class="row mb-3">
-        <div class="col-md-6 d-flex mh=100">
-            <div class="container">
-                <img class="img-fluid" src="{% static 'media/growbusiness.png' %}">
-                <br/>
-                <div class="row text-center fs-1" id="text"><b>Grow your business </b></div>
-                <div class="row text-center fs-1" id="text"><b>with FlavorFlow</b></div>
-                <div class="row text-center fs-1" id="cust"><a href="{% url 'userSignin' %}"><i><b> <span style="font-size:12px; background-color: #004656; border-radius: 18px; padding:5px">Not a restaurant?</span></b></i></a></div>
-            </div>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class= "container-fluid">
+            <a class="navbar-logo" href="#"><img src="{% static 'media/navbarlogo.png' %}" height="40"></a>
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link d-flex justify-content-center align-items-center" href="#">
+                        <img src="{% static 'media/getsupport.png'%}" height="14"><span>Get Support</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link d-flex justify-content-center align-items-center" href="{% url 'rest_login' %}">
+                        <img src="{% static 'media/login.png' %}" height="14"><span>Login</span>
+                    </a>
+                </li>
+                <li>
+                    <button class="nav-link active" aria-current="page">Get Started</button>
+                </li>
+            </ul>
         </div>
-        </br>
-        <div class="col-md-4 d-flex mh=100" id="form">
-            <div class="container form-container">
-                <form action="{% url 'restDashboard' %}" method="POST">{% csrf_token %}
-                    <h3>Sign up for a free account</h3><br/>
-                    <div class="mb-3">
-                        <input class="container-fluid" type="text" placeholder="Store Location">
-                    </div>
-                    <div class="mb-3">
-                        <input class="container-fluid" type="text" placeholder="Floor/Suite (optional)">
-                    </div>
-                    <div class="mb-3">
-                        <input class="container-fluid" type="text" placeholder="Store Name">
-                    </div>
-                    <div class="mb-3">
-                        <input class="container-fluid" type="text" placeholder="Brand Name">
-                    </div>
-                    <div class="mb-3">
-                        <select class="container-fluid">
-                            <option disabled selected id="ct">Cuisine Type</option>
-                            <option>Asian</option>
-                            <option>Cafe</option>
-                            <option>Fast Food</option>
-                            <option>Greek</option>
-                            <option>Italian</option>
-                            <option>Lebanese</option>
-                            <option>Mexican</option>
+    </nav>
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-6 d-flex mh=100">
+                <div class="container">
+                    <img class="img-fluid" src="{% static 'media/growbusiness.png' %}">
+                    <br/>
+                    <div class="row text-center fs-1" id="text"><b>Grow your business </b></div>
+                    <div class="row text-center fs-1" id="text"><b>with FlavorFlow</b></div>
+                    <div class="row text-center fs-1" id="cust"><a href="{% url 'userSignin' %}"><i><b> <span style="font-size:12px; background-color: #004656; border-radius: 18px; padding:5px">Not a restaurant?</span></b></i></a></div>
+                </div>
+            </div>
+            </br>
+            <div class="col-md-4 d-flex mh=100" id="form">
+                <div class="container form-container">
+                    <form action="{% url 'restSignup' %}" method="post">{% csrf_token %}
+                        <h3>Sign up for a free account</h3><br/>
+                        <div class="mb-3">
+                            <input class="container-fluid" type="text" name="location" placeholder="Store Location">
+                        </div>
+                        <div class="mb-3">
+                            <input class="container-fluid" type="text" name="suite" placeholder="Floor/Suite (optional)">
+                        </div>
+                        <div class="mb-3">
+                            <input class="container-fluid" type="text" name="store_name" placeholder="Store Name">
+                        </div>
+                        <div class="mb-3">
+                            <input class="container-fluid" type="text" name="brand_name" placeholder="Brand Name">
+                        </div>
+                        <div class="mb-3">
+                            <select class="container-fluid" name="cuisine_type">
+                                <option disabled selected id="ct">Cuisine Type</option>
+                                <option>Asian</option>
+                                <option>Cafe</option>
+                                <option>Fast Food</option>
+                                <option>Greek</option>
+                                <option>Italian</option>
+                                <option>Lebanese</option>
+                                <option>Mexican</option>
 
-                        </select>
-                    </div>
-                    <div class="row mb-3 form-container-fluid flex-row">
-                        <div class="col-6 d-flex">
-                            <input type="text" placeholder="First name">
-                        </div>
-                        <div class="col-6 container-fluid d-flex">
-                            <input class="container-fluid" type="text" placeholder="Last name">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <input class="container-fluid" type="text" placeholder="Email address">
-                    </div>
-                    <div class="row mb-3 form-container-fluid flex-row">
-                        <div class="col-2 d-flex">
-                            <select>
-                                <option disabled selected> AU </option>
                             </select>
                         </div>
-                        <div class="col-10 container-fluid d-flex">
-                            <input class="container-fluid" type="text" placeholder="Phone number">
+                        <div class="row mb-3 form-container-fluid flex-row">
+                            <div class="col-6 d-flex">
+                                <input type="text" name="first_name" placeholder="First name">
+                            </div>
+                            <div class="col-6 container-fluid d-flex">
+                                <input class="container-fluid" type="text" name="last_name"placeholder="Last name">
+                            </div>
                         </div>
-                    </div>
-                    <div class="checkbox-row">
-                        <input type="checkbox" checked>
-                    </div>
-                    <div class="row mb-3">
-                        <p>By selecting to 'Opt in', I agree that FlavorFlow, its affiliates and/or representatives may contact me on the phone number
-                            (by calls or text messages) on file with my merchant account for purposes of merchant account updates. I understand that this is not a
-                            requirement to use FlavorFlows's services and that I may opt out of these communications by texting 'Stop' to +6141234567. For more information, please see FlavorFlow's Privacy Notice. </p>
-                    </div>
-                    <div class="submit-row">
-                        <button type="submit">
-                            Register
-                        </button>
-                    </div>
-                </form>
+                        <div class="mb-3">
+                            <input class="container-fluid" type="text" name="email" placeholder="Email address">
+                        </div>
+                        <div class="row mb-3 form-container-fluid flex-row">
+                            <div class="col-2 d-flex">
+                                <select>
+                                    <option disabled selected> AU </option>
+                                </select>
+                            </div>
+                            <div class="col-10 container-fluid d-flex">
+                                <input class="container-fluid" type="text" name="phone_number" placeholder="Phone number">
+                            </div>
+                        </div>
+                        <div class="checkbox-row">
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="row mb-3">
+                            <p>By selecting to 'Opt in', I agree that FlavorFlow, its affiliates and/or representatives may contact me on the phone number
+                                (by calls or text messages) on file with my merchant account for purposes of merchant account updates. I understand that this is not a
+                                requirement to use FlavorFlows's services and that I may opt out of these communications by texting 'Stop' to +6141234567. For more information, please see FlavorFlow's Privacy Notice. </p>
+                        </div>
+                        <div class="submit-row">
+                            <button type="submit">
+                                Register
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
+            <div class="col-md-2"> </div>
         </div>
-        <div class="col-md-2"> </div>
     </div>
-</div>
 
 {% endblock %}
+
