@@ -107,11 +107,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Australia/Sydney'
-
+TIME_ZONE = 'Australia/Sydney'  # or any valid time zone
 USE_I18N = True
 
 USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)
@@ -122,6 +122,9 @@ STATICFILES_DIRS = [
   os.path.join(BASE_DIR, 'flavourflow_app/static')
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
+
+# MEDIA_URL = 'media/'
+# MEDIA_ROOT = ''
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Welcome Page{% endblock %}
-{% block styles %}<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <style>
     .btn.btn-primary{
-        background-color:#fc8042;
-        border:none;
+        background-color: #fc8042;
+        border: none;
     }
     </style>
 {% endblock %}
@@ -27,6 +28,17 @@
                     <h4 class="card-title" style="text-align: center">FlavorFlow for Customers</h4>
                     <p class="card-text">Streamline your culinary journey with us as we bring local kitchens to your doorstep.</p>
                     <a href="{% url 'userSignin'%}" class="btn btn-primary" data-mdb-ripple-init>Place your order now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="row mb-3 justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body" style="text-align: center;">
+                    <h4 class="card-title">FlavorFlow for Drivers</h4>
+                    <p class="card-text">Join FlavorFlow database of drivers and join us on our mission.</p>
+                    <a href="#" class="btn btn-primary" data-mdb-ripple-init>Join now</a>
                 </div>
             </div>
         </div>

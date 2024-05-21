@@ -81,7 +81,12 @@ def restDashboard(request):
 def flavourflow_app(request):
     return render(request, 'index.html')
 
+# @userSignin
+def user_dashboard(request):
+    return render(request, 'user/dashboard.html')
 
+# def membership(request):
+#     pass
 def membership(request):
     return render(request, 'membership.html')
 
