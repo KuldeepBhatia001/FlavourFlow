@@ -20,7 +20,7 @@ def restSignup_view(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect ("restDashboard.html")
+            return redirect("restDashboard.html")
     else:
         form = UserCreationForm()
     return render(request, "registration/restSignup.html", {'form': form})
@@ -31,4 +31,9 @@ def restDashboard(request):
 def flavourflow_app(request):
     return render(request, 'index.html')
 
+# @userSignin
+def user_dashboard(request):
+    return render(request, 'user/dashboard.html')
 
+# def membership(request):
+#     pass

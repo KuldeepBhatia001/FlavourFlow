@@ -19,7 +19,7 @@ a:hover{
 .nav-link.active{
     color:white;
     background-color: #fc8042;
-    border-radius: 18px;
+    border-radius: 5px;
 }
 .nav-link.active:hover{
     color:white;
