@@ -1,0 +1,88 @@
+/* navbar */
+.navbar {
+    background-color: #00474F; /* Change to match the image background color */
+}
+.navbar-nav .nav-link {
+    color: #B0BEC5; /* Light gray color for text */
+}
+.navbar-nav .nav-link:hover {
+    color: #FFFFFF; /* White color on hover */
+}
+.navbar-brand {
+    font-weight: bold;
+    color: #FF6F00; /* Orange color for the logo */
+}
+.navbar-brand span {
+    display: block;
+    font-size: 0.75em;
+    color: #FFFFFF; /* White color for the smaller text */
+}
+.nav-icon {
+    font-size: 1.25em;
+    margin-right: 5px;
+}
+/* end navbar */
+
+body {
+    background-color: #00474F;
+    color: #ffffff;
+}
+
+.search-bar {
+    margin: 20px 0;
+}
+.search-bar input {
+    border-radius: 25px;
+    padding: 10px 20px;
+    width: 100%;
+    border: none;
+}
+.delivery-address {
+    margin: 20px 0;
+}
+.category-section {
+    display: flex;
+    justify-content: space-between;
+    overflow-x: auto;
+}
+.category-section a {
+    text-align: center;
+    flex: 0 0 auto;
+    margin-right: 10px;
+    color: #ffffff;
+    text-decoration: none;
+}
+.category-section a.active {
+    border-bottom: 2px solid #FF6F00;
+}
+.food-item-section {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.food-item {
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+    width: 48%;
+    padding: 10px;
+}
+.food-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 50%;
+}
+.food-item h5 {
+    margin: 10px 0;
+}
+.food-item p {
+    color: #FF6F00;
+    font-weight: bold;
+}
+.see-more {
+    text-align: right;
+    color: #FF6F00;
+    text-decoration: none;
+}
