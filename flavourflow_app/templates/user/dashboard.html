@@ -1,14 +1,49 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% include 'navbar.html' %}
 
 {% block content %}
-<div class="container mt-5">
-  <h1>User Dashboard</h1>
+<div class="container">
+  <!-- Search Bar -->
+  <div class="search-bar">
+      <input type="text" placeholder="Search">
+  </div>
 
-  <!-- search box -->
+  <!-- Delivery Address -->
+  <div class="delivery-address">
+      <h5>Delivery Now</h5>
+      <p>{{ delivery_address }} <span class="dropdown-toggle" data-toggle="dropdown"></span></p>
+  </div>
 
-  
+  <!-- Categories -->
+  <div class="category-section">
+      {% for category in categories %}
+          <a href="#" class="{% if forloop.first %}active{% endif %}">
+              {% if category.icon %}
+                  <img src="{{ category.icon.url }}" alt="{{ category.name }}" height="30">
+              {% else %}
+                  {{ category.name }}
+              {% endif %}
+          </a>
+      {% endfor %}
+  </div>
+
+  <!-- Food Items -->
+  <div class="food-item-section">
+      {% for food_item in food_items %}
+          <div class="food-item">
+              {% if food_item.image %}
+                  <img src="{{ food_item.image.url }}" alt="{{ food_item.name }}">
+              {% else %}
+                  <img src="{% static 'media/flavflow.png' %}" alt="{{ food_item.name }}">
+              {% endif %}
+              <h5>{{ food_item.name }}</h5>
+              <p>${{ food_item.price }}</p>
+          </div>
+      {% endfor %}
+  </div>
+
+  <a href="#" class="see-more">see more</a>
 </div>
 {% endblock %}

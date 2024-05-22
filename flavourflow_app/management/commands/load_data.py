@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from flavourflow_app.models import Customer, Restaurant, Item, Order, OrderItem, ShoppingCart, Transaction, Analytics, Menu, Favorite, Delivery
+from flavourflow_app.models import Customer, Restaurant, Item, Order, OrderItem, ShoppingCart, Transaction, Analytics, Menu, Favorite, Delivery, Category
 from faker import Faker
 import random
 from datetime import datetime, timedelta
@@ -23,7 +23,13 @@ class Command(BaseCommand):
         Menu.objects.all().delete()
         Favorite.objects.all().delete()
         Delivery.objects.all().delete()
+        Category.objects.all().delete()
         User.objects.all().exclude(is_superuser=True).delete()
+
+        # Create default category
+        default_category, created = Category.objects.get_or_create(
+            name='Uncategorized'
+        )
 
         # Create Users and Customers
         for _ in range(5):
@@ -71,6 +77,7 @@ class Command(BaseCommand):
             Item.objects.create(
                 name=faker.word(),
                 restaurant=random.choice(restaurants),
+                category=default_category,  # Use the default category
                 price=faker.pydecimal(left_digits=2, right_digits=2, positive=True),
                 image='meal_images/sample_image.jpg',
                 is_available=faker.boolean()

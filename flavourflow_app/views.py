@@ -17,7 +17,7 @@ def userSignin(request):
             if user is not None:
                 login(request)
                 messages.success(request, f'Welcome {username}!')
-                return redirect('home')
+                return redirect('dashboard')
             else:
                 messages.error(request, 'Invalid username or password.')
         else:
@@ -67,9 +67,28 @@ def flavourflow_app(request):
     return render(request, 'index.html')
 
 
-# @userSignin
+# @login_required
 def user_dashboard(request):
     return render(request, 'user/dashboard.html')
+
+
+
+def favorites(request):
+    return render(render, 'user/favourites.html')
+
+def shopping_cart(request):
+    return render(render, 'user/shopping_cart.html')
+
+
+def chat(request):
+    return render(render, 'user/chat.html')
+
+
+def history(request):
+    return render(render, 'user/history.html')
+
+def settings(request):
+    return render(render, 'user/settings.html')
 
 
 # def membership(request):
