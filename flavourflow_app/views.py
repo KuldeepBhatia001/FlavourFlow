@@ -111,7 +111,7 @@ def user_dashboard(request):
 
 
 def favorites(request):
-    return render(render, 'user/favourites.html')
+    return render(render, 'user/favorites.html')
 
 def shopping_cart(request):
     return render(render, 'user/shopping_cart.html')
