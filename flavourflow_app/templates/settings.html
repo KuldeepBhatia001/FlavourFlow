@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Settings{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/settings.css' %}">
+
+{% endblock %}
+
+{% block content %}
+    <div class="container text-center py-5 text-white">
+    <img src="{% static 'media/login.png' %}">
+    <p class="lead">{{ username }}</p>
+    <p class="lead">{{ user_email }}</p>
+
+    <div class="list-group">
+            <a href="membership.html" class="list-group-item list-group-item-action">Membership</a>
+            <a href="#" class="list-group-item list-group-item-action">Setting 2</a>
+            <a href="#" class="list-group-item list-group-item-action">Setting 3</a>
+
+            <a href="{% url 'userSignin' %}" class="list-group-item list-group-item-action">Log out</a>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+{% endblock %}

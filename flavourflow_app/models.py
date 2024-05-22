@@ -104,6 +104,15 @@ class Transaction(models.Model):
     def __str__(self):
         return f"Transaction for Order {self.order.order_number}"
 
+
+class Category(models.Model):
+    name = models.CharField(max_length=255, default='Uncategorized')
+    icon = models.ImageField(upload_to='category_icons/', null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Analytics(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='monthly_analytics')
     month = models.DateField()  # Store the first day of the month

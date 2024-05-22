@@ -23,4 +23,8 @@ urlpatterns = [
     path('chat', views.chat, name="chat"),
     path('history', views.history, name="history"),
     path('settings', views.settings, name="settings"),
+
+
+
+
 ]
