@@ -90,7 +90,27 @@ def payments(request):
 
 
 def checkoutOrder(request):
-    return render(request, 'checkoutOrder.html')
+    delivery_option = request.session.get('delivery_option', 'standard')
+
+    # Define delivery fees based on the options
+    delivery_fees = {
+        'priority': 3.99,
+        'standard': 0.99,
+        'schedule': 1.99,
+    }
+    # Calculate the delivery fee
+    delivery_fee = delivery_fees.get(delivery_option, 0.99)
+    # Assuming you have a method to get the user's cart total
+    shopping_cart = request.user.shopping_cart
+    cart_total = shopping_cart.total_price
+    service_fee = 2.60
+    total_price = cart_total + delivery_fee + service_fee
+
+    return render(request, 'checkoutOrder.html', {
+        'delivery_fee': delivery_fee,
+        'total_price': total_price,
+        'cart_total': cart_total
+    })
 
 
 def checkoutPayment(request):
@@ -107,7 +127,7 @@ def checkoutPayment(request):
             cvv = payment_form.cleaned_data['cvv']
             expiration_date = payment_form.cleaned_data['expiration_date']
 
-            # Handle payment processing here
+            request.session['delivery_option'] = delivery.delivery_option
 
             # Redirect to the order tracking page
             return redirect('checkoutOrder')

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Check Out{% endblock %}
-{% block styles %}<link rel="stylesheet" type="text/css" href="{% static 'css/checkoutOrder.css' %}">
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/checkoutOrder.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -16,19 +17,21 @@
                 {% csrf_token %}
                 <div class="card-container">
                     <div class="form-group">
-                        <label for="promo-code" class="text-white">Add Promo Code</label>
+                        <label for="promo-code" class="text-white " style="font-size: 1.5em;">Add Promo Code</label>
                         <input type="text" id="promo-code" name="promo" class="form-control" placeholder="Promo Code">
                     </div>
-                    <p class="text-white">Subtotal: <span class="value">${{ cart.total_price|floatformat:2 }}</span></p>
-                    <p class="text-white">Delivery Fee: <span class="value">$0.99</span></p>
-                    <p class="text-white">Service Fee: <span class="value">$2.60</span></p>
-                    <p class="text-white">Total: <span class="value total-line">${{ cart.total_price|add:3.59|floatformat:2 }}</span></p>
-                    <button type="submit" class="btn centered-button">Next</button>
+                    <p class="text-white" style="font-size: 1em;">Subtotal: <span class="value" style="float: right; clear: both; color: #ff6a00;">${{ cart_total|floatformat:2 }}</span></p>
+                    <p class="text-white" style="font-size: 1em;">Delivery Fee: <span class="value" style="float: right; clear: both; color: #ff6a00;">${{ delivery_fee|floatformat:2 }}</span></p>
+                    <p class="text-white" style="font-size: 1em;">Service Fee: <span class="value" style="float: right; clear: both; color: #ff6a00;">$2.60</span></p>
+                    <p class="text-white" style="font-size: 1em;">Total: <span class="value" style="float: right; clear: both; color: #ff6a00;">${{ total_price|floatformat:2 }}</span></p>
+                    <div class="center-container">
+                        <button type="submit" class="btn btn-primary" >Next</button>
+                    </div>
 
                     <p class="text-white">If you're not around when the delivery person arrives, they'll leave your order at the door. By placing your order, you agree to take full responsibility for it once it's delivered. Orders containing alcohol or other restricted items may not be eligible for leave at door and will be returned to the store if you are not available. Estimated pricing: We'll put a hold on your card for up to $29.59. If any changes are made to your order to account for things like replacements or the actual weight of items, they will be reflected in the final charge on your receipt.</p>
                 </div>
             </form>
         </div>
-    </div
+    </div>
 </div>
 {% endblock %}

@@ -53,7 +53,8 @@ nav{
         }
 .card-container {
             background-color: #001f26;
-
+            display: flex;
+            justify-content: center;
             padding: 80px;              /* Padding inside the card */
             margin-top: 30px;
             color: white;
@@ -66,17 +67,10 @@ nav{
         text-align: right;
 
     }
-.value {
-        float: right;
-        clear: both;  /* Ensures the value aligns right regardless of preceding content */
-        color: orange;
+
+ .center-container {
+        display: flex;
+        justify-content: center;
+        text-align: center;
     }
 
-.centered-button {
-        display: block;  /* Makes the button a block-level element */
-        width: 20%;      /* Sets the width of the button to 50% of its container */
-        margin: 20px auto; /* Vertically spaces the button and centers it horizontally */
-        background-color: #dc7c33; /* Bootstrap primary color, change as needed */
-        color: white;    /* Text color for the button */
-        border: none;    /* Removes the border */
-    }
