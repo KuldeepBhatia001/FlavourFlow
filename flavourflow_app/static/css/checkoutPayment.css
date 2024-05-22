@@ -1,0 +1,41 @@
+.form-section {
+        margin-bottom: 20px;
+    }
+
+    .form-section h4 {
+        margin-bottom: 10px;
+    }
+
+    .form-section .form-control {
+        margin-bottom: 10px;
+    }
+
+    .form-check {
+        margin-bottom: 10px;
+    }
+
+    .form-control.no-border {
+        border: none;
+        box-shadow: none;
+    }
+
+    .centered-button {
+        display: block;
+        width: 50%;
+        margin: 20px auto;
+        background-color: #dc7c33;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .centered-button:hover {
+        background-color: #e08547;
+    }
+
+    .text-white {
+        color: white;
+    }
