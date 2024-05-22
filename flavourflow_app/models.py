@@ -132,5 +132,5 @@ class Delivery(models.Model):
     delivery_location = models.CharField(max_length=255)
     delivery_option = models.CharField(max_length=100)  # e.g., 'standard', 'priority'
 
-    def str(self):
+    def __str__(self):
         return f"{self.user.username} - {self.delivery_option}"
