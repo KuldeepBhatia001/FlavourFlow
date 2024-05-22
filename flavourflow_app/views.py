@@ -1,12 +1,82 @@
-from django.contrib import messages, auth
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, authenticate;
-from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render, redirect, get_object_or_404
+from django.db import IntegrityError
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import *
 from .models import *
 
 
+def user_signup(request):
+    if request.method == 'POST':
+        form = CustomerSignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            try:
+                user.save()
+                Customer.objects.create(
+                    user=user,
+                    name=form.cleaned_data['name'],
+                    phone=form.cleaned_data['phone'],
+                    payment_method=form.cleaned_data['payment_method'],
+                    street=form.cleaned_data['street'],
+                    city=form.cleaned_data['city'],
+                    state=form.cleaned_data['state'],
+                    postcode=form.cleaned_data['postcode'],
+                )
+                messages.success(request, 'Account created successfully! Please login.')
+                return redirect('userSignin')
+            except IntegrityError:
+                messages.error(request, 'A customer with this user already exists.')
+                user.delete()  # Delete the user if the customer creation fails
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = CustomerSignUpForm()
+    return render(request, 'user/userSignup.html', {'form': form})
+
+
+def user_signin(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('user_dashboard')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'user/userSignin.html', {'form': form})
+
+
+
+def user_signout(request):
+    logout(request)
+    return redirect('userSignin')
+
+
+@login_required
+def user_dashboard(request):
+    customer = Customer.objects.get(user=request.user)
+    delivery_address = f"{customer.street}, {customer.city}, {customer.state}, {customer.postcode}" if customer.street else "No address specified"
+    categories = Category.objects.all()
+    food_items = Item.objects.all()
+    favorites = Favorite.objects.filter(customer=customer)
+
+    context = {
+        'customer': customer,
+        'delivery_address': delivery_address,
+        'categories': categories,
+        'food_items': food_items,
+        'favorites': favorites
+    }
+    return render(request, 'user/dashboard.html', context)
+
+
+"""
 def userSignin(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -15,9 +85,9 @@ def userSignin(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request)
+                login(request, user)
                 messages.success(request, f'Welcome {username}!')
-                return redirect('dashboard')
+                return redirect('dashboard/')
             else:
                 messages.error(request, 'Invalid username or password.')
         else:
@@ -25,8 +95,7 @@ def userSignin(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, "userSignin.html", {'form': form})
-
+    return render(request, "user/userSignin.html", {'form': form})
 
 def userSignup(request):
     if request.method == 'POST':
@@ -44,28 +113,28 @@ def userSignup(request):
     return render(request, 'userSignup.html', {'form': form})
 
 
-def login(request):
-    return render(request, "registration/login.html")
+# def login(request):
+#     return render(request, "registration/login.html")
 
 
-# @login_required
+@login_required
 def user_dashboard(request):
-    # user = request.user
-    # customer = Customer.objects.get(user=user)
-    # delivery_address = f"{customer.street}, {customer.city}, {customer.state}, {customer.postcode}" if customer.street else "No address specified"
-    # categories = Category.objects.all()
-    # food_items = Item.objects.all()
-    # favorites = Favorite.objects.filter(customer=customer)
+    customer=Customer.objects.get(user=request.user)
+    delivery_address = f"{customer.street}, {customer.city}, {customer.state}, {customer.postcode}" if customer.street else "No address specified"
+    categories = Category.objects.all()
+    food_items = Item.objects.all()
+    favorites = Favorite.objects.filter(customer=customer)
 
-    # context = {
-    #     'customer': customer,
-    #     'delivery_address': delivery_address,
-    #     'categories': categories,
-    #     'food_items': food_items,
-    #     'favorites': favorites
-    # }
-    return render(request, 'user/dashboard.html')
+    context = {
+        'customer': customer,
+        'delivery_address': delivery_address,
+        'categories': categories,
+        'food_items': food_items,
+        'favorites': favorites
+    }
+    return render(request, 'user/dashboard.html', context)
 
+"""
 
 
 def restSignup_view(request):
@@ -89,23 +158,41 @@ def flavourflow_app(request):
 
 
 def favorites(request):
-    return render(render, 'user/favorites.html')
+    return render(request, 'user/favorites.html')
 
 def shopping_cart(request):
-    return render(render, 'user/shopping_cart.html')
+    return render(request, 'user/shopping_cart.html')
 
 def chat(request):
-    return render(render, 'user/chat.html')
+    return render(request, 'user/chat.html')
 
 def history(request):
-    return render(render, 'user/history.html')
+    return render(request, 'user/history.html')
 
 def settings(request):
-    return render(render, 'user/settings.html')
+    return render(request, 'user/settings.html')
+
+
+def items(request):
+    return render(request, 'user/items.html')
 
 
 def membership(request):
     return render(request, 'membership.html')
+
+
+def restaurant_detail(request, pk):
+    restaurant = get_object_or_404(Restaurant, pk=pk)
+    featured_items = Item.objects.filter(restaurant=restaurant, category__name='Featured')
+    category_items = Item.objects.filter(restaurant=restaurant).exclude(category__name='Featured')
+
+    context = {
+        'restaurant': restaurant,
+        'featured_items': featured_items,
+        'category_items': category_items,
+    }
+    return render(request, 'restaurant_detail.html', context)
+
 
 
 def payments(request):

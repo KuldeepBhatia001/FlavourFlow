@@ -21,7 +21,7 @@
         </br>
         <div class="col-md-4 d-flex mh=100" id="form">
             <div class="container form-container">
-                <form action="{% url 'home' %}" method="POST">{% csrf_token %}
+                <form action="{% url 'dashboard' %}" method="POST">{% csrf_token %}
                     <h3>Enter your Payment Details</h3><br/>
                     <div class="mb-3">
                         <input class="container-fluid" type="text" placeholder="Card Number">

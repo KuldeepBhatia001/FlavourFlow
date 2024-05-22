@@ -28,20 +28,22 @@
           </a>
       {% endfor %}
   </div>
+  <hr>
 
   <!-- Food Items -->
-  <div class="food-item-section">
-      {% for food_item in food_items %}
-          <div class="food-item">
-              {% if food_item.image %}
-                  <img src="{{ food_item.image.url }}" alt="{{ food_item.name }}">
-              {% else %}
-                  <img src="{% static 'media/flavflow.png' %}" alt="{{ food_item.name }}">
-              {% endif %}
-              <h5>{{ food_item.name }}</h5>
-              <p>${{ food_item.price }}</p>
-          </div>
-      {% endfor %}
+  <div class="row m-auto justify-content-center">
+    {% for food_item in food_items %}
+    <div class="card col-2 m-3">
+        
+        <img src="{% static 'media/logo_plain.png' %}" alt="{{ food_item.name }}" class="card-img-top d-flex justify-content-center">
+        
+        <div class="card-body m-auto text-center">
+            <h5 class="card-title">{{ food_item.name }}</h5>
+            <p class="card-text">${{ food_item.price }}</p>
+            <a href="{% url 'items' %}" class="btn btn-primary bg-primary">View Item</a>
+        </div>
+    </div>
+    {% endfor %}
   </div>
 
   <a href="#" class="see-more">see more</a>

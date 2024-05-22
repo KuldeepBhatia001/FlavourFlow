@@ -1,10 +1,22 @@
 from django.urls import path
 from . import views
 
+from .views import *
+
 urlpatterns = [
     path('', views.flavourflow_app, name='flavourflow_app'),
-    path('userSignin', views.userSignin, name='userSignin'),
-    path('userSignup', views.userSignup, name='userSignup'),
+
+    path('signup/', views.user_signup, name='userSignup'),
+    path('signin/', views.user_signin, name='userSignin'),
+
+    path('signout/', views.user_signout, name='userSignout'),
+
+
+    path('dashboard/', views.user_dashboard, name='user_dashboard'),
+
+
+    # path('userSignin', views.userSignin, name='userSignin'),
+    # path('userSignup', views.userSignup, name='userSignup'),
     path('restSignup/', views.restSignup_view, name='restSignup'),
     path('login/', views.login, name='login'),
     path('restDashboard/', views.restDashboard, name='restDashboard'),
@@ -24,6 +36,8 @@ urlpatterns = [
     path('settings', views.settings, name="settings"),
 
 
+    path('items/',views.items, name="items"),
+    path('restaurant/<int:pk>/', views.restaurant_detail, name='restaurant_detail'),
 
 
 ]

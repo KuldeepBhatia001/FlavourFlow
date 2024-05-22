@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+<div class="container">
+  <div class="restaurant-header">
+      <img src="{{ restaurant.logo.url }}" alt="Restaurant Image" class="img-fluid">
+      <h1>{{ restaurant.name }}</h1>
+      <p>{{ restaurant.distance }} Km Away</p> <!-- Assuming distance is a field or context variable -->
+      <div>
+          <button class="btn btn-outline-primary btn-delivery-pickup">Delivery</button>
+          <button class="btn btn-outline-secondary btn-delivery-pickup">Pickup</button>
+      </div>
+  </div>
+
+  <div class="delivery-info">
+      <div>
+          <p><strong>$0.99 Delivery Fee + Service Fee</strong></p>
+          <p>Prices & Fees</p>
+      </div>
+      <div>
+          <p><strong>25-40 min</strong></p>
+          <p>Delivery time</p>
+      </div>
+  </div>
+
+  <h2>Featured Items</h2>
+  <div class="featured-items">
+      {% for item in featured_items %}
+      <div class="item-card">
+          <img src="{{ item.image.url }}" alt="Item Image" class="img-fluid">
+          <h5>{{ item.name }}</h5>
+          <p>${{ item.price }}</p>
+          <button class="btn btn-primary">Add to Cart</button>
+      </div>
+      {% endfor %}
+  </div>
+
+  <h2>Category 1</h2>
+  <div class="category-items">
+      {% for item in category_items %}
+      <div class="item-card">
+          <img src="{{ item.image.url }}" alt="Item Image" class="img-fluid">
+          <h5>{{ item.name }}</h5>
+          <p>${{ item.price }}</p>
+          <button class="btn btn-primary">Add to Cart</button>
+      </div>
+      {% endfor %}
+  </div>
+</div>

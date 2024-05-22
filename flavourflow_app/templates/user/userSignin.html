@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="block">
-        <form class="login-form" method="post">
+        <form class="login-form" method="post" action="{% url 'userSignin' %}">
             {% csrf_token %}
             <h2>Sign-in</h2>
             {{ form.as_p }}

@@ -4,6 +4,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer')
+    name = models.CharField(max_length=500, default="John")
     phone = models.CharField(max_length=10)
     payment_method = models.CharField(max_length=50)
     is_member = models.BooleanField(default=False)
@@ -11,6 +12,10 @@ class Customer(models.Model):
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=50)
     postcode = models.CharField(max_length=4)
+    
+    def __str__(self):
+        return self.user.username
+
 
 class Restaurant(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='restaurant')
@@ -28,7 +33,7 @@ class Restaurant(models.Model):
         return self.name
 
 class Category(models.Model):
-    name = models.CharField(max_length=255, default='Uncategorized')
+    name = models.CharField(max_length=255, default='U  ncategorized')
     icon = models.ImageField(upload_to='category_icons/', null=True, blank=True)
 
     def __str__(self):

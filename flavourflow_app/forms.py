@@ -1,14 +1,37 @@
 from django import forms
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-
 from .models import *
 
+class CustomerSignUpForm(UserCreationForm):
+    name = forms.CharField(max_length=500, required=True)
+    phone = forms.CharField(max_length=10, required=True)
+    payment_method = forms.CharField(max_length=50, required=True)
+    street = forms.CharField(max_length=255, required=True)
+    city = forms.CharField(max_length=255, required=True)
+    state = forms.CharField(max_length=50, required=True)
+    postcode = forms.CharField(max_length=4, required=True)
 
-class UserForm(forms.ModelForm):
-    email = forms.CharField(max_length=100, required=True)
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2', 'name', 'phone', 'payment_method', 'street', 'city', 'state', 'postcode')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+        return user
 
 
-class MenuForm(forms.ModelForm):
+
+"""
+class UserForm(forms.Form):
+    username=forms.CharField(widget=forms.CharField)
+    password=forms.CharField(widget=forms.PasswordInput)
+
+
+"""
+class MenuForm(forms.Form):
     class Meta:
         model = Menu
         exclude = ("restaurant",)

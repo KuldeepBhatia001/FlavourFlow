@@ -40,11 +40,11 @@ body {
 .delivery-address {
     margin: 20px 0;
 }
-.category-section {
+/* .category-section {
     display: flex;
     justify-content: space-between;
     overflow-x: auto;
-}
+} */
 .category-section a {
     text-align: center;
     flex: 0 0 auto;
@@ -55,11 +55,11 @@ body {
 .category-section a.active {
     border-bottom: 2px solid #FF6F00;
 }
-.food-item-section {
+/* .food-item-section {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-}
+} 
 .food-item {
     background-color: #ffffff;
     color: #000000;
@@ -85,4 +85,9 @@ body {
     text-align: right;
     color: #FF6F00;
     text-decoration: none;
+}
+*/
+
+.bg-primary {
+    background-color: #FF6F00;
 }
