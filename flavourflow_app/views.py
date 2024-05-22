@@ -1,5 +1,6 @@
 from django.contrib import messages, auth
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, authenticate;
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import *
@@ -98,10 +99,22 @@ def checkoutOrder(request):
         'standard': 0.99,
         'schedule': 1.99,
     }
+
+    try:
+        # Get the user's shopping cart
+        shopping_cart = request.user.shopping_cart
+    except ObjectDoesNotExist:
+        messages.error(request, 'You do not have a shopping cart. Please add items to your cart first.')
+        return redirect('home')  # Redirect to the shopping cart page  setting to home to be changed later
+
+    # Check if the shopping cart is empty
+    if not shopping_cart.items.exists():
+        messages.error(request, 'Your shopping cart is empty.')
+        return redirect('home')  # Redirect to the shopping cart page setting to home to be changed later
+
     # Calculate the delivery fee
     delivery_fee = delivery_fees.get(delivery_option, 0.99)
-    # Assuming you have a method to get the user's cart total
-    shopping_cart = request.user.shopping_cart
+    # Get the cart total
     cart_total = shopping_cart.total_price
     service_fee = 2.60
     total_price = cart_total + delivery_fee + service_fee
