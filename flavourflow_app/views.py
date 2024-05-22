@@ -17,7 +17,7 @@ def userSignin(request):
             if user is not None:
                 login(request)
                 messages.success(request, f'Welcome {username}!')
-                return redirect('home')
+                return redirect('dashboard')
             else:
                 messages.error(request, 'Invalid username or password.')
         else:
@@ -46,6 +46,43 @@ def userSignup(request):
 
 def login(request):
     return render(request, "registration/login.html")
+
+
+@login_required
+def user_dashboard(request):
+    user = request.user
+    customer = Customer.objects.get(user=user)
+    delivery_address = f"{customer.street}, {customer.city}, {customer.state}, {customer.postcode}" if customer.street else "No address specified"
+    categories = Category.objects.all()
+    food_items = Item.objects.all()
+    favorites = Favorite.objects.filter(customer=customer)
+
+    context = {
+        'customer': customer,
+        'delivery_address': delivery_address,
+        'categories': categories,
+        'food_items': food_items,
+        'favorites': favorites
+    }
+    return render(request, 'user/dashboard.html', context)
+
+
+def favorites(request):
+    return render(render, 'user/favourites.html')
+
+def shopping_cart(request):
+    return render(render, 'user/shopping_cart.html')
+
+
+def chat(request):
+    return render(render, 'user/chat.html')
+
+
+def history(request):
+    return render(render, 'user/history.html')
+
+def settings(request):
+    return render(render, 'user/settings.html')
 
 
 def restSignup_view(request):
@@ -156,3 +193,11 @@ def checkoutPayment(request):
 
 def orderTracking(request):
     return render(request, 'orderTracking.html')
+
+def settings(request):
+    user = request.user
+    context = {
+        'username': user.username,
+        'user_email': user.email,
+    }
+    return render(request, 'settings.html', context)

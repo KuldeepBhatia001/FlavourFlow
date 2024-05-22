@@ -126,3 +126,16 @@
 .login-form button:hover {
     background-color: #0056b3; /* Blue on hover */
 }
+
+.form-error {
+    color: white;
+}
+
+.form-error li {
+    color: white;
+}
+
+.form-error  {
+    color: white;
+}
+

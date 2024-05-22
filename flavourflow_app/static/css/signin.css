@@ -75,3 +75,11 @@ input[type=checkbox] {
     color: #969BB0;
     font-size: smaller;
 }
+
+.form-error {
+    color: white;
+}
+
+.form-error li {
+    color: white;
+}
