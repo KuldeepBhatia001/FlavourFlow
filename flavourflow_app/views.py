@@ -48,41 +48,24 @@ def login(request):
     return render(request, "registration/login.html")
 
 
-@login_required
+# @login_required
 def user_dashboard(request):
-    user = request.user
-    customer = Customer.objects.get(user=user)
-    delivery_address = f"{customer.street}, {customer.city}, {customer.state}, {customer.postcode}" if customer.street else "No address specified"
-    categories = Category.objects.all()
-    food_items = Item.objects.all()
-    favorites = Favorite.objects.filter(customer=customer)
+    # user = request.user
+    # customer = Customer.objects.get(user=user)
+    # delivery_address = f"{customer.street}, {customer.city}, {customer.state}, {customer.postcode}" if customer.street else "No address specified"
+    # categories = Category.objects.all()
+    # food_items = Item.objects.all()
+    # favorites = Favorite.objects.filter(customer=customer)
 
-    context = {
-        'customer': customer,
-        'delivery_address': delivery_address,
-        'categories': categories,
-        'food_items': food_items,
-        'favorites': favorites
-    }
-    return render(request, 'user/dashboard.html', context)
+    # context = {
+    #     'customer': customer,
+    #     'delivery_address': delivery_address,
+    #     'categories': categories,
+    #     'food_items': food_items,
+    #     'favorites': favorites
+    # }
+    return render(request, 'user/dashboard.html')
 
-
-def favorites(request):
-    return render(render, 'user/favourites.html')
-
-def shopping_cart(request):
-    return render(render, 'user/shopping_cart.html')
-
-
-def chat(request):
-    return render(render, 'user/chat.html')
-
-
-def history(request):
-    return render(render, 'user/history.html')
-
-def settings(request):
-    return render(render, 'user/settings.html')
 
 
 def restSignup_view(request):
@@ -104,11 +87,6 @@ def flavourflow_app(request):
     return render(request, 'index.html')
 
 
-# @login_required
-def user_dashboard(request):
-    return render(request, 'user/dashboard.html')
-
-
 
 def favorites(request):
     return render(render, 'user/favorites.html')
@@ -116,10 +94,8 @@ def favorites(request):
 def shopping_cart(request):
     return render(render, 'user/shopping_cart.html')
 
-
 def chat(request):
     return render(render, 'user/chat.html')
-
 
 def history(request):
     return render(render, 'user/history.html')
@@ -128,15 +104,8 @@ def settings(request):
     return render(render, 'user/settings.html')
 
 
-# def membership(request):
-#     pass
 def membership(request):
     return render(request, 'membership.html')
-
-
-@login_required
-def home(request):
-    return render(request, 'home.html')
 
 
 def payments(request):

@@ -10,7 +10,6 @@ urlpatterns = [
     path('restDashboard/', views.restDashboard, name='restDashboard'),
     
     path('membership/', views.membership, name='membership'),
-    path('home/', views.home, name='home'),
     path('payments/', views.payments, name='payments'),
     path('checkoutOrder/', views.checkoutOrder, name='checkoutOrder'),
     path('checkoutPayment/', views.checkoutPayment, name='checkoutPayment'),
