@@ -90,12 +90,35 @@ def payments(request):
 
 
 def checkoutOrder(request):
-
     return render(request, 'checkoutOrder.html')
 
 
 def checkoutPayment(request):
-    return render(request, 'checkoutPayment.html')
+    if request.method == 'POST':
+        delivery_form = DeliveryForm(request.POST)
+        payment_form = PaymentForm(request.POST)
+        if delivery_form.is_valid() and payment_form.is_valid():
+            # Save delivery information
+            delivery = delivery_form.save(commit=False)
+            delivery.user = request.user  # Assuming the user is logged in
+            delivery.save()
+
+            card_number = payment_form.cleaned_data['card_number']
+            cvv = payment_form.cleaned_data['cvv']
+            expiration_date = payment_form.cleaned_data['expiration_date']
+
+            # Handle payment processing here
+
+            # Redirect to the order tracking page
+            return redirect('checkoutOrder')
+    else:
+        delivery_form = DeliveryForm()
+        payment_form = PaymentForm()
+
+    return render(request, 'checkoutPayment.html', {
+        'delivery_form': delivery_form,
+        'payment_form': payment_form
+    })
 
 
 def orderTracking(request):
