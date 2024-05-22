@@ -1,37 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'base_old.html' %}
 {% load static %}
 
 {% block title %}userSignin{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/signin.css' %}">
 {% endblock %}
 
 {% block content %}
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-logo" href="#"><img src="{% static 'media/navbarlogo.png' %}" height="40"></a>
-        <ul class="nav justify-content-end">
-            <li class="nav-item">
-                <a class="nav-link d-flex justify-content-center align-items-center" href="#">
-                    <img src="{% static 'media/getsupport.png' %}" height="14" class="d-inline-block align-text-center">
-                    <span>Get Support</span>
-                </a>
-            </li>
-            <li>
-                <button class="nav-link active d-flex justify-content-center align-items-center" aria-current="page">
-                    <img src="{% static 'media/login.png' %}" height="14">
-                    <span>Login</span>
-                </button>
-            </li>
-            <li class="nav-item">
-                <a class="btn btn-primary nav-link" href="{% url 'restSignup' %}">
-                    <span>Add your restaurant</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
 <div class="container">
     <div class="top-block">
         <div class="logo">
@@ -50,4 +26,3 @@
     </div>
 </div>
 {% endblock %}
-

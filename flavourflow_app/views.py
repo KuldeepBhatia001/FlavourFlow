@@ -1,5 +1,6 @@
 from django.contrib import messages, auth
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, authenticate;
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import *
@@ -29,29 +30,18 @@ def userSignin(request):
 
 def userSignup(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-
-        if password1 == password2:
-            if User.objects.filter(username=username).exists():
-                messages.error(request, 'Username is already taken')
-                return redirect('userSignup')
-            elif User.objects.filter(email=email).exists():
-                messages.error(request, 'Email is already registered')
-                return redirect('userSignup')
-            else:
-                user = User.objects.create_user(username=username, email=email, password=password1)
-                user.save()
-                auth.login(request, user)
-                messages.success(request, 'You are now logged in')
-                return redirect('home')
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request)
+            messages.success(request, 'Registration successful')
+            return redirect('userSignin')  # Redirect to home or another appropriate page
         else:
-            messages.error(request, 'Passwords do not match')
-            return redirect('userSignup')
+            messages.error(request, 'Please correct the error below.')
     else:
-        return render(request, "userSignup.html")
+        form = SignUpForm()
+
+    return render(request, 'userSignup.html', {'form': form})
 
 
 def login(request):
@@ -76,9 +66,11 @@ def restDashboard(request):
 def flavourflow_app(request):
     return render(request, 'index.html')
 
+
 # @userSignin
 def user_dashboard(request):
     return render(request, 'user/dashboard.html')
+
 
 # def membership(request):
 #     pass
@@ -86,6 +78,7 @@ def membership(request):
     return render(request, 'membership.html')
 
 
+@login_required
 def home(request):
     return render(request, 'home.html')
 
@@ -98,23 +91,68 @@ def payments(request):
 
 
 def checkoutOrder(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
+    delivery_option = request.session.get('delivery_option', 'standard')
 
-    try:
-        cart = ShoppingCart.objects.get(user=request.user)
-        delivery = Delivery.objects.get(user=request.user)  # Get the most recent delivery info
-    except (ShoppingCart.DoesNotExist, Delivery.DoesNotExist):
-        return redirect('error_page')  # Redirect to an appropriate error page
-
-    context = {
-        'cart': cart,
-        'delivery': delivery,
-        'service_fee': 2.60
+    # Define delivery fees based on the options
+    delivery_fees = {
+        'priority': 3.99,
+        'standard': 0.99,
+        'schedule': 1.99,
     }
 
-    return render(request, 'checkoutOrder.html', context)
+    try:
+        # Get the user's shopping cart
+        shopping_cart = request.user.shopping_cart
+    except ObjectDoesNotExist:
+        messages.error(request, 'You do not have a shopping cart. Please add items to your cart first.')
+        return redirect('home')  # Redirect to the shopping cart page  setting to home to be changed later
+
+    # Check if the shopping cart is empty
+    if not shopping_cart.items.exists():
+        messages.error(request, 'Your shopping cart is empty.')
+        return redirect('home')  # Redirect to the shopping cart page setting to home to be changed later
+
+    # Calculate the delivery fee
+    delivery_fee = delivery_fees.get(delivery_option, 0.99)
+    # Get the cart total
+    cart_total = shopping_cart.total_price
+    service_fee = 2.60
+    total_price = cart_total + delivery_fee + service_fee
+
+    return render(request, 'checkoutOrder.html', {
+        'delivery_fee': delivery_fee,
+        'total_price': total_price,
+        'cart_total': cart_total
+    })
 
 
 def checkoutPayment(request):
-    return render(request, 'checkoutPayment.html')
+    if request.method == 'POST':
+        delivery_form = DeliveryForm(request.POST)
+        payment_form = PaymentForm(request.POST)
+        if delivery_form.is_valid() and payment_form.is_valid():
+            # Save delivery information
+            delivery = delivery_form.save(commit=False)
+            delivery.user = request.user  # Assuming the user is logged in
+            delivery.save()
+
+            card_number = payment_form.cleaned_data['card_number']
+            cvv = payment_form.cleaned_data['cvv']
+            expiration_date = payment_form.cleaned_data['expiration_date']
+
+            request.session['delivery_option'] = delivery.delivery_option
+
+            # Redirect to the order tracking page
+            return redirect('checkoutOrder')
+    else:
+        delivery_form = DeliveryForm()
+        payment_form = PaymentForm()
+
+    return render(request, 'checkoutPayment.html', {
+        'delivery_form': delivery_form,
+        'payment_form': payment_form
+    })
+
+
+def orderTracking(request):
+    return render(request, 'orderTracking.html')

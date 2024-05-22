@@ -8,13 +8,15 @@ urlpatterns = [
     path('restSignup/', views.restSignup_view, name='restSignup'),
     path('login/', views.login, name='login'),
     path('restDashboard/', views.restDashboard, name='restDashboard'),
-    # path('membership/', views.membership, name='membership'),
+
     path('dashboard/', views.user_dashboard, name='dashboard'),
     path('membership/', views.membership, name='membership'),
     path('home/', views.home, name='home'),
     path('payments/', views.payments, name='payments'),
     path('checkoutOrder/', views.checkoutOrder, name='checkoutOrder'),
     path('checkoutPayment/', views.checkoutPayment, name='checkoutPayment'),
+    path('orderTracking/', views.orderTracking, name='orderTracking'),
+
 
 
 

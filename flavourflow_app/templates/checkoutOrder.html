@@ -3,31 +3,9 @@
 {% block title %}Check Out{% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/checkoutOrder.css' %}">
-
 {% endblock %}
 
 {% block content %}
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class= "container-fluid">
-        <a class="navbar-logo " href="#"><img src="{% static 'media/navbarlogo.png' %}" height="40"></a>
-
-        <ul class="nav justify-content-end">
-            <li class="nav-item">
-                <a class="nav-link d-flex justify-content-center align-items-center" href="#">
-                    <img src="{% static 'media/getsupport.png'%}" height="14"><span>Get Support</span>
-                </a>
-            </li>
-            <li>
-                <a class="nav-link d-flex justify-content-center align-items-center" href="{% url 'login' %}">
-                    <img src="{% static 'media/login.png' %}" height="14"><span>Login</span>
-                </a>
-            </li>
-            <li>
-                <button class="nav-link active" aria-current="page">Get Started</button>
-            </li>
-        </ul>
-    </div>
-</nav>
 <div class="container-fluid">
     <div class="row mb-3 align-items-center">
         <div class="col-md-6">
@@ -35,25 +13,25 @@
             <div class="row text-center fs-1" id="text"><b>Check Out</b></div>
         </div>
         <div class="col-md-6">
-            <div class="card-container">
-                <form action="{% url 'checkoutPayment' %}" method="get">
-                    {% csrf_token %}
+            <form action="{% url 'orderTracking' %}" method="post">
+                {% csrf_token %}
+                <div class="card-container">
                     <div class="form-group">
-                        <label for="promo-code">Add Promo Code</label>
+                        <label for="promo-code" class="text-white " style="font-size: 1.5em;">Add Promo Code</label>
                         <input type="text" id="promo-code" name="promo" class="form-control" placeholder="Promo Code">
                     </div>
-                     <p>Subtotal: <span class="value">${{ cart.total_price|floatformat:2 }}</span></p>
-                     <p>Delivery Fee: <span class="value">$0.99</span></p>
-                     <p>Service Fee: <span class="value">$2.60</span></p>
-                     <p>Total: <span class="value total-line">${{ cart.total_price|add:3.59|floatformat:2 }}</span></p>
-                    <button type="submit" class="btn centered-button">Proceed To Payment</button>
-                </form>
-                <p>If you're not around when the delivery person arrives, they'll leave your order at the door. By placing your order, you agree to take full responsibility for it once it's delivered. Orders containing alcohol or other restricted items may not be eligible for leave at door and will be returned to the store if you are not available.
-Estimated pricing: We'll put a hold on your card for up to $29.59.
-If any changes are made to your order to account for things like replacements or the actual weight of items, they will be reflected in the final charge on your receipt.</p>
-            </div>
+                    <p class="text-white" style="font-size: 1em;">Subtotal: <span class="value" style="float: right; clear: both; color: #ff6a00;">${{ cart_total|floatformat:2 }}</span></p>
+                    <p class="text-white" style="font-size: 1em;">Delivery Fee: <span class="value" style="float: right; clear: both; color: #ff6a00;">${{ delivery_fee|floatformat:2 }}</span></p>
+                    <p class="text-white" style="font-size: 1em;">Service Fee: <span class="value" style="float: right; clear: both; color: #ff6a00;">$2.60</span></p>
+                    <p class="text-white" style="font-size: 1em;">Total: <span class="value" style="float: right; clear: both; color: #ff6a00;">${{ total_price|floatformat:2 }}</span></p>
+                    <div class="center-container">
+                        <button type="submit" class="btn btn-primary" >Next</button>
+                    </div>
+
+                    <p class="text-white">If you're not around when the delivery person arrives, they'll leave your order at the door. By placing your order, you agree to take full responsibility for it once it's delivered. Orders containing alcohol or other restricted items may not be eligible for leave at door and will be returned to the store if you are not available. Estimated pricing: We'll put a hold on your card for up to $29.59. If any changes are made to your order to account for things like replacements or the actual weight of items, they will be reflected in the final charge on your receipt.</p>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-
-{%  endblock %}
+{% endblock %}

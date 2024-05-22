@@ -31,6 +31,7 @@ class Restaurant(models.Model):
     def __str__(self):
         return self.name
 
+
 class Item(models.Model):
     name = models.CharField(max_length=255)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
@@ -41,6 +42,7 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
+
 class Favorite(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='favorites')
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='favorited_by')
@@ -50,6 +52,7 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f"{self.customer.user.username} - {self.item.name}"
+
 
 class Order(models.Model):
     order_number = models.AutoField(primary_key=True)
@@ -69,6 +72,7 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.order_number}"
 
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
@@ -77,6 +81,7 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.quantity} x {self.item.name} in {self.order.order_number}"
 
+
 class ShoppingCart(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='shopping_cart')
@@ -84,6 +89,7 @@ class ShoppingCart(models.Model):
 
     def __str__(self):
         return f"Shopping Cart for {self.user.username}"
+
 
 class Transaction(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
@@ -99,6 +105,7 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"Transaction for Order {self.order.order_number}"
+
 
 class Analytics(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='monthly_analytics')
@@ -117,6 +124,7 @@ class Analytics(models.Model):
     def __str__(self):
         return f"Analytics for {self.restaurant.name} - {self.month.strftime('%B %Y')}"
 
+
 class Menu(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
@@ -126,6 +134,7 @@ class Menu(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Delivery(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

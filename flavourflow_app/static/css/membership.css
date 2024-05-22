@@ -26,13 +26,24 @@ body {
     padding: 20px;
 
 }
-nav{
+
+av{
     background-color: #004656;
 }
+a{
+    color:white;
+    text-decoration: none;
+}
+a:hover{
+    color: white;
+    text-decoration: none;
+    cursor:pointer;
+}
+
 .nav-link.active{
     color:white;
     background-color: #fc8042;
-    border-radius: 18px;
+    border-radius: 5px;
 }
 .nav-link.active:hover{
     color:white;
@@ -41,6 +52,8 @@ nav{
 .navbar-logo{
     margin-left:20px;
 }
+
+
 
 .pricing-card {
     margin: 0 auto;
