@@ -1,1 +1,36 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/history.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container d-flex justify-content-center text-center">
+    {% if customer_orders %}
+        <div class="order-history">
+            <h2>Your Order History</h2>
+            <ul>
+                {% for order in customer_orders %}
+                    {% for item in order.items.all %}
+                        <li>
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                            <p>{{ item.name }}</p>
+                            <form method="post" action="{% url 'order_history' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="item_id" value="{{ item.id }}">
+                                <button type="submit">Add to Cart</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <div class="no-history">
+            <img src="{% static 'media/order.png' %}" alt="No History Icon">
+            <p>No history yet</p>
+            <p>Hit the orange button below to start browsing</p>
+            <a href="{% url 'dashboard' %}" class="p-2" style="background-color: #FF6F00; border-radius: 5px;">Start Browsing</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

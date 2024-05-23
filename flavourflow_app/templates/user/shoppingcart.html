@@ -1,0 +1,81 @@
+{% extends 'base_old.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/shoppingcart.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container content-container text-center mt-5">
+    {% if cart_items %}
+    <div class="container content-container text-center mt-5">
+        <h2>Your Cart</h2>
+        <ul class="list-group mb-4">
+            {% for item in cart_items %}
+                <li class="list-group-item cart-item">
+                    <span>{{ item.name }}</span>
+                    <span>${{ item.price }}</span>
+                    <form method="post" class="form-inline update-cart-form" data-item-id="{{ item.id }}">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control mx-2 quantity-input">
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="text-right mb-4">
+            <h4>Total: $<span id="total-price">{{ total_price }}</span></h4>
+        </div>
+        <div class="text-center">
+            <a href="{% url 'checkoutPayment' %}" class="btn btn-warning btn-lg">Go to Checkout</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="container content-container text-center mt-5">
+        <div class="text-center">
+            <img src="{% static 'media/cart.png' %}" alt="Cart Icon" class="cart-icon">
+            <h3>No items in your cart</h3>
+            <p>Browse the menu and add items to your cart</p>
+            <a href="{% url 'dashboard' %}" class="btn start-ordering-btn">Browse Menu</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Update cart quantity
+        $('.quantity-input').change(function(){
+            var form = $(this).closest('.update-cart-form');
+            var itemId = form.data('item-id');
+            var quantity = $(this).val();
+            
+            $.ajax({
+                url: "{% url 'update_cart' 0 %}".replace('0', itemId),
+                type: 'POST',
+                data: {
+                    'quantity': quantity,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response){
+                    $('#total-price').text(response.total_price);
+                }
+            });
+        });
+
+        // Remove item from cart
+        $('.remove-from-cart-btn').click(function(){
+            var itemId = $(this).data('item-id');
+
+            $.ajax({
+                url: "{% url 'remove_from_cart' 0 %}".replace('0', itemId),
+                type: 'POST',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response){
+                    // Reload the page to reflect the changes
+                    location.reload();
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

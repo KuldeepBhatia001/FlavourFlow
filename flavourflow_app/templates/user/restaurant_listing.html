@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <!-- Restaurant Details -->
+    <div class="restaurant-header text-center">
+        {% if restaurant.logo %}
+            <img src="{{ restaurant.logo.url }}" alt="{{ restaurant.name }}" class="img-fluid">
+        {% else %}
+            <img src="{% static 'media/logo_plain.png' %}" alt="{{ restaurant.name }}" class="img-fluid">
+        {% endif %}
+        <h2>{{ restaurant.name }}</h2>
+        <p>{{ restaurant.city }}, {{ restaurant.state }}</p>
+        <p>2.5 Km Away</p>
+        <div class="delivery-pickup">
+            <button class="btn btn-primary">Delivery</button>
+            <button class="btn btn-secondary">Pickup</button>
+        </div>
+        <div class="fees-time">
+            <p>$0.99 Delivery Fee + Service Fee</p>
+            <p>25-40 min Delivery time</p>
+        </div>
+    </div>
+
+    <!-- Menu Details -->
+    <div class="menu-details mt-4">
+        <h4>{{ menu.name }}</h4>
+        <p>{{ menu.description }}</p>
+    </div>
+
+    <!-- All Items -->
+    <div class="all-items mt-4">
+        <h4>All Items</h4>
+        <div class="row">
+            {% for item in menu.items.all %}
+            <div class="card col-2 m-3">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="card-img-top">
+                {% else %}
+                    <img src="{% static 'media/logo_plain.png' %}" alt="{{ item.name }}" class="card-img-top">
+                {% endif %}
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="card-text">${{ item.price }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

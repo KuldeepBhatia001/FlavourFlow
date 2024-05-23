@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="item-header text-center">
+        {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="img-fluid">
+        {% else %}
+            <img src="{% static 'media/logo_plain.png' %}" alt="{{ item.name }}" class="img-fluid">
+        {% endif %}
+        <h2>{{ item.name }}</h2>
+        <p>${{ item.price }}</p>
+        <p>{{ item.category.name }}</p>
+        <p>{{ item.restaurant.name }}</p>
+    </div>
+
+    <div class="item-description mt-4">
+        <p>{{ item.description }}</p>
+    </div>
+
+    <div class="delivery-info mt-4">
+        <h4>Delivery info</h4>
+        <p>Delivered between Monday and Thursday from 8pm to 9:32pm</p>
+    </div>
+
+    <div class="return-policy mt-4">
+        <h4>Return policy</h4>
+        <p>All our foods are double checked before leaving our stores so by any case you found a broken food please contact our hotline immediately.</p>
+    </div>
+
+    <div class="add-to-cart mt-4">
+        <button class="btn btn-primary">Add to cart</button>
+    </div>
+</div>
+{% endblock %}

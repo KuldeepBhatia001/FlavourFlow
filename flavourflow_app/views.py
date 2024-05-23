@@ -7,6 +7,10 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import *
 from .models import *
+from django.http import JsonResponse
+from django.db.models import Count, F
+from decimal import Decimal
+
 
 
 def user_signup(request):
@@ -60,20 +64,31 @@ def user_signout(request):
 
 @login_required
 def user_dashboard(request):
-    customer = Customer.objects.get(user=request.user)
-    delivery_address = f"{customer.street}, {customer.city}, {customer.state}, {customer.postcode}" if customer.street else "No address specified"
-    categories = Category.objects.all()
-    food_items = Item.objects.all()
-    favorites = Favorite.objects.filter(customer=customer)
+    try:
+        customer = Customer.objects.get(user=request.user)
+        delivery_address = f"{customer.street}, {customer.city}, {customer.state}, {customer.postcode}" if customer.street else "No address specified"
+        categories = Category.objects.all()
+        food_items = Item.objects.all()
+        favorites = Favorite.objects.filter(customer=customer)
+        restaurants = Restaurant.objects.all()
 
-    context = {
-        'customer': customer,
-        'delivery_address': delivery_address,
-        'categories': categories,
-        'food_items': food_items,
-        'favorites': favorites
-    }
-    return render(request, 'user/dashboard.html', context)
+        context = {
+            'customer': customer,
+            'delivery_address': delivery_address,
+            'categories': categories,
+            'food_items': food_items,
+            'favorites': favorites,
+            'restaurants': restaurants
+        }
+        return render(request, 'user/dashboard.html', context)
+    except Customer.DoesNotExist:
+        messages.error(request, "Customer profile not found. Please create a customer profile.")
+        return redirect('userSignup')  # Redirect to a page where user can create a profile
+
+    except Exception as e:
+        messages.error(request, f"An unexpected error occurred: {e}")
+        return redirect('userSignup') 
+
 
 
 """
@@ -157,8 +172,16 @@ def flavourflow_app(request):
 
 
 
+@login_required
 def favorites(request):
-    return render(request, 'user/favorites.html')
+    customer = request.user.customer
+    favorite_items = Favorite.objects.filter(customer=customer)
+
+    context = {
+        'favorite_items': favorite_items,
+    }
+
+    return render(request, 'user/favorites.html', context)
 
 def shopping_cart(request):
     return render(request, 'user/shopping_cart.html')
@@ -166,20 +189,34 @@ def shopping_cart(request):
 def chat(request):
     return render(request, 'user/chat.html')
 
+@login_required
 def history(request):
-    return render(request, 'user/history.html')
+    customer_orders = Order.objects.filter(customer=request.user)
+
+    if request.method == "POST":
+        item_id = request.POST.get('item_id')
+        try:
+            item = Item.objects.get(id=item_id)
+            shopping_cart, created = ShoppingCart.objects.get_or_create(user=request.user)
+            shopping_cart.items.add(item)
+            shopping_cart.total_price += item.price
+            shopping_cart.save()
+            messages.success(request, f'Added {item.name} to your shopping cart.')
+        except Item.DoesNotExist:
+            messages.error(request, 'Item not found.')
+        return redirect('order_history')
+
+    context = {
+        'customer_orders': customer_orders,
+    }
+    return render(request, 'user/history.html', context)
 
 def settings(request):
     return render(request, 'user/settings.html')
 
 
-def items(request):
-    return render(request, 'user/items.html')
-
-
 def membership(request):
     return render(request, 'membership.html')
-
 
 def restaurant_detail(request, pk):
     restaurant = get_object_or_404(Restaurant, pk=pk)
@@ -191,9 +228,46 @@ def restaurant_detail(request, pk):
         'featured_items': featured_items,
         'category_items': category_items,
     }
-    return render(request, 'restaurant_detail.html', context)
+    return render(request, 'user/restaurant_detail.html', context)
+
+def restaurant_listing(request, restaurant_id):
+    restaurant = get_object_or_404(Restaurant, id=restaurant_id)
+    menu = Menu.objects.filter(restaurant=restaurant, is_active=True).first()
+
+    context = {
+        'restaurant': restaurant,
+        'menu': menu,
+    }
+    return render(request, 'user/restaurant_listing.html', context)
+
+def item_detail(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+
+    context = {
+        'item': item,
+    }
+    return render(request, 'user/item_detail.html', context)
+
+def items(request):
+    items = Item.objects.all()
+    return render(request, 'user/item_detail.html', {items})
 
 
+"""
+def restaurant_listing(request, restaurant_id):
+    restaurant = get_object_or_404(Restaurant, id=restaurant_id)
+    items = Item.objects.filter(restaurant=restaurant)
+    categories = Category.objects.all()
+    categorized_items = {category: items.filter(category=category) for category in categories}
+    featured_items = items[:3]  # Assuming the first 3 items are featured for simplicity
+
+    context = {
+        'restaurant': restaurant,
+        'categorized_items': categorized_items,
+        'featured_items': featured_items,
+    }
+    return render(request, 'user/restaurant_listing.html', context)
+"""
 
 def payments(request):
     if request.method == 'POST':
@@ -217,19 +291,19 @@ def checkoutOrder(request):
         shopping_cart = request.user.shopping_cart
     except ObjectDoesNotExist:
         messages.error(request, 'You do not have a shopping cart. Please add items to your cart first.')
-        return redirect('home')  # Redirect to the shopping cart page  setting to home to be changed later
+        return redirect('dashboard')  # Redirect to the shopping cart page  setting to home to be changed later
 
     # Check if the shopping cart is empty
     if not shopping_cart.items.exists():
         messages.error(request, 'Your shopping cart is empty.')
-        return redirect('home')  # Redirect to the shopping cart page setting to home to be changed later
+        return redirect('dashboard')  # Redirect to the shopping cart page setting to home to be changed later
 
     # Calculate the delivery fee
     delivery_fee = delivery_fees.get(delivery_option, 0.99)
     # Get the cart total
     cart_total = shopping_cart.total_price
-    service_fee = 2.60
-    total_price = cart_total + delivery_fee + service_fee
+    service_fee = Decimal(str(2.60))
+    total_price =  Decimal(str(cart_total)) +  Decimal(str((delivery_fee))) + service_fee
 
     return render(request, 'checkoutOrder.html', {
         'delivery_fee': delivery_fee,
@@ -276,3 +350,79 @@ def settings(request):
         'user_email': user.email,
     }
     return render(request, 'settings.html', context)
+
+@login_required
+def cart(request):
+    try:
+        # Retrieve the shopping cart for the logged-in user
+        cart = ShoppingCart.objects.get(user=request.user)
+        
+        # Get the items from the shopping cart along with a count of each item
+        cart_items = cart.items.annotate(quantity=Count('id')).order_by()
+
+        # Calculate the total price
+        total_price = sum(item.price * item.quantity for item in cart_items)
+
+        cart.total_price = total_price  
+        cart.save() # not able to load in db correctly
+
+        context = {
+            'cart_items': cart_items,
+            'total_price': total_price,
+        }
+        
+        return render(request, 'user/shoppingcart.html', context)
+    except ShoppingCart.DoesNotExist:
+        return render(request, 'user/shoppingcart.html', {
+            'cart_items': [], 
+            'total_price': 0,
+        })
+    
+@login_required
+def update_cart(request, item_id):
+    if request.method == 'POST':
+        try:
+            # Retrieve the shopping cart for the logged-in user
+            cart = ShoppingCart.objects.get(user=request.user)
+
+            # Retrieve the order item to be updated
+            cart_items = OrderItem.objects.get(pk=item_id)
+
+            # Update the quantity of the order item
+            quantity = int(request.POST.get('quantity'))
+            cart_items.quantity = quantity
+            cart_items.save()
+
+            # Calculate the total price
+            total_price = sum(item.item.price * item.quantity for item in cart.items.all())
+
+            # Return the updated total price as JSON response
+            return JsonResponse({'total_price': total_price})
+        except (ShoppingCart.DoesNotExist, OrderItem.DoesNotExist):
+            return JsonResponse({'error': 'Could not update cart item.'}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@login_required
+def remove_from_cart(request, item_id):
+    if request.method == 'POST':
+        try:
+            # Retrieve the shopping cart for the logged-in user
+            cart = ShoppingCart.objects.get(user=request.user)
+
+            # Retrieve the order item to be removed
+            order_item = OrderItem.objects.get(pk=item_id)
+
+            # Remove the order item from the cart
+            cart.items.remove(order_item)
+
+            # Calculate the total price
+            total_price = sum(item.item.price * item.quantity for item in cart.items.all())
+
+            # Return success response with the updated total price
+            return JsonResponse({'total_price': total_price})
+        except (ShoppingCart.DoesNotExist, OrderItem.DoesNotExist):
+            return JsonResponse({'error': 'Could not remove item from cart.'}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+

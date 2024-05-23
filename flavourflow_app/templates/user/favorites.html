@@ -1,1 +1,30 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/favorites.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container d-flex justify-content-center text-center">
+    {% if favorite_items %}
+        <div class="favorites-list">
+            <h2>Your Favorites</h2>
+            <ul>
+                {% for favorite in favorite_items %}
+                    <li>
+                        <img src="{{ favorite.item.image.url }}" alt="{{ favorite.item.name }}">
+                        <p>{{ favorite.item.name }}</p>
+                        <p>{{ favorite.item.restaurant.name }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <div class="no-favorites">
+            <img src="{% static 'media/favorite.png' %}" alt="Heart Icon">
+            <p>No favourites yet</p>
+            <p>Hit the orange button down below to Create an order</p>
+            <a href="{% url 'dashboard' %}" class="p-2" style="background-color: #FF6F00; border-radius: 5px;">Start Ordering</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

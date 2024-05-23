@@ -1,0 +1,35 @@
+body {
+    background-color: #001F26;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+.container {
+    text-align: center;
+    padding: 20px;
+}
+
+.no-favorites {
+    margin-top: 20px;
+}
+.no-favorites img {
+    width: 50px;
+    height: 50px;
+}
+.no-favorites p {
+    font-size: 18px;
+}
+.no-favorites button {
+    background-color: #FF6F00;
+    border: none;
+    padding: 15px 30px;
+    color: #fff;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+}

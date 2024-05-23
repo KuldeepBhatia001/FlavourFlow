@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="restaurant-header text-center">
+        {% if restaurant.logo %}
+            <img src="{{ restaurant.logo.url }}" alt="{{ restaurant.name }}" class="img-fluid">
+        {% else %}
+            <img src="{% static 'media/logo_plain.png' %}" alt="{{ restaurant.name }}" class="img-fluid">
+        {% endif %}
+        <h2>{{ restaurant.name }}</h2>
+        <p>{{ restaurant.city }}, {{ restaurant.state }}</p>
+    </div>
+
+    <!-- Featured Items -->
+    <div class="featured-items mt-4">
+        <h4>Featured Items</h4>
+        <div class="row">
+            {% for item in featured_items %}
+            <div class="card col-3 m-3">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="card-img-top">
+                {% else %}
+                    <img src="{% static 'media/logo_plain.png' %}" alt="{{ item.name }}" class="card-img-top">
+                {% endif %}
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="card-text">${{ item.price }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- All Other Items -->
+    <div class="category-items mt-4">
+        <h4>All Items</h4>
+        <div class="row">
+            {% for item in category_items %}
+            <div class="card col-3 m-3">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="card-img-top">
+                {% else %}
+                    <img src="{% static 'media/logo_plain.png' %}" alt="{{ item.name }}" class="card-img-top">
+                {% endif %}
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="card-text">${{ item.price }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
