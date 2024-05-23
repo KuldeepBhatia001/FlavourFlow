@@ -10,6 +10,156 @@ from .models import *
 from django.http import JsonResponse
 from django.db.models import Count, F
 from decimal import Decimal
+from django.contrib import messages, auth
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponseRedirect
+from django.urls import reverse
+from django.db.models import Sum
+from django.utils import timezone
+from .forms import *
+from .models import *
+from django.contrib.auth import authenticate,login,logout
+from django.views import View
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("rest_login")
+def restSignup_view(request):
+    if request.method == "POST":
+        form = RestRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("restDashboard")
+    else:
+        form = RestRegisterForm()
+    return render(request, "registration/restSignup.html", {'form': form})
+@login_required(login_url='rest_login')
+def restDashboard(request):
+    user=request.user
+    restaurant=Restaurant.objects.get(user=user)
+    restaurant_name=restaurant.name
+    user_name=user.get_full_name()
+    return render(request, 'restDashboard.html',{'user_name':user_name,'restaurant_name':restaurant_name})
+
+def restMenu(request):
+        restaurant = Restaurant.objects.get(user=request.user)
+        menus = Menu.objects.filter(restaurant=restaurant)
+        selected_menu_name = request.GET.get('menu', '')
+        selected_menu= None
+        menu_items = {}
+        for menu in menus:
+            menu_items[menu.name] = menu.items.all()  # Fetch items for each menu
+
+        if selected_menu_name:  # If a menu name is provided in the request
+            selected_menu = get_object_or_404(Menu, name=selected_menu_name, restaurant=restaurant)
+
+        return render(request, "restMenu.html", {"menus": menus, "menu_items": menu_items, "selected_menu": selected_menu})
+@login_required(login_url='rest_login')
+def get_menu_items(request):
+    if request.method == 'GET' and request.is_ajax():
+        menu_id = request.GET.get('menu_id')
+        try:
+            menu = Menu.objects.get(id=menu_id)
+            items = menu.items.all()
+            items_data = [{'name': item.name, 'description': item.description, 'price': item.price} for item in items]
+            return JsonResponse({'items': items_data})
+        except Menu.DoesNotExist:
+            return JsonResponse({'error': 'Menu not found'}, status=404)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+def edit_menu(request):
+    restaurant = Restaurant.objects.get(user=request.user)
+    items = Item.objects.filter(restaurant=restaurant)
+    if request.method == 'POST':
+        formset = MenuItemFormSet(request.POST, queryset=items)
+        if formset.is_valid():
+            formset.save()
+            return redirect('restDashboard')  # Redirect to dashboard after saving
+    else:
+        formset = MenuItemFormSet(queryset=items)
+        formset.restaurant = restaurant  # Pass the restaurant context to the formset
+    return render(request, 'restMenu.html', {'formset': formset})
+
+def restPerformance(request):
+    # Calculate total revenue for the current month
+    current_month_orders = Order.objects.filter(created_at__month=timezone.now().month)
+    total_revenue = current_month_orders.aggregate(total_revenue=Sum('orderitem__item__price'))['total_revenue'] or 0
+
+    # Calculate the number of orders for the current month
+    total_orders = current_month_orders.count()
+
+    return render(request, "restPerformance.html", {
+        "total_orders": total_orders,
+        "total_revenue": total_revenue,
+    })
+def restOrders(request):
+    user=request.user
+    orders= Order.objects.prefetch_related('orderitem_set__item').all()
+    return render(request,'restOrders.html',{'orders':orders})
+
+@login_required(login_url='rest_login')
+def update_order_status(request, order_id):
+    if request.method == 'POST':
+        order = Order.objects.get(order_id)
+        action = request.POST.get('action')  # Assuming you have a hidden input field in your form with name 'action'
+        if action == 'accept':
+            order.status = 'accepted'
+            order.save()
+            return HttpResponseRedirect(reverse('restOrders'))
+        elif action == 'reject':
+            order.status = 'rejected'
+            order.save()
+            return JsonResponse({'status': 'success', 'message': 'Order rejected'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Invalid action'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+@login_required(login_url='rest_login')
+def accept_order(request, order_id):
+    if request.method == 'POST':
+        order = Order.objects.get(pk=order_id)
+        order.status = 'accepted'
+        order.save()
+        return JsonResponse({'status': 'success','message':'Order accepted'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+@login_required(login_url='rest_login')
+def reject_order(request, order_id):
+    if request.method == 'POST':
+        order = Order.objects.get(pk=order_id)
+        order.status = 'rejected'
+        order.save()
+        return JsonResponse({'status': 'success','message':'Order rejected'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+class RestLoginView(View):
+    def get(self, request):
+        form = AuthenticationForm()
+        form.fields['username'].widget.attrs.update({'placeholder': 'Email address'})
+        form.fields['password'].widget.attrs.update({'placeholder': 'Password'})
+        return render(request,'registration/login.html',{'form':form})
+    def post(self, request):
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user=authenticate(request, username=email,password=password)
+            if user is not None:
+                login(request,user)
+                try:
+                    restaurant=Restaurant.objects.get(user=user)
+                    return redirect("restDashboard")
+                except Restaurant.DoesNotExist:
+                    return render("registration/login.html", {'form':form})
+            else:
+                messages.error(request,'Invalid Credentials')
+        return render(request,'registration/login.html',{'form':form,'error':'Invalid'})
+
 
 
 
