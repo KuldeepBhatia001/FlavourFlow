@@ -1,7 +1,36 @@
-from django import forms
-from django.contrib.auth.models import User
+rom django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import AbstractUser
 from .models import *
+from django.forms import modelformset_factory, ModelChoiceField
+from .models import Item
+
+
+class MenuItemFormSet(modelformset_factory(Item, fields=('name', 'price', 'image', 'is_available'), extra=0)):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.queryset = Item.objects.none()
+
+        # Add a field for selecting the menu
+        menus = Menu.objects.filter(restaurant=self.restaurant)  # Assuming you have a ForeignKey from Menu to Restaurant
+        self.fields['menu'] = ModelChoiceField(queryset=menus)
+class RestLoginForm(forms.Form):
+    email=forms.EmailField()
+    password=forms.CharField(widget=forms.PasswordInput)
+
+class RestRegisterForm(UserCreationForm):
+
+    name=forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
+    email=forms.EmailField(required=True)
+    location=forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
+    category=forms.CharField(max_length=100)
+    phone=forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
+
+
+    class Meta:
+        model = User
+        fields = ('email','password1','password2','name','location','category','phone')
+
 
 class CustomerSignUpForm(UserCreationForm):
     name = forms.CharField(max_length=500, required=True)
