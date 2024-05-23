@@ -1,3 +1,4 @@
+
 {% extends 'Restbase.html' %}
 {% load static %}
 {% block styles %}<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
@@ -11,7 +12,7 @@
                 <hr/>
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item">
-                        <a href="#" class="nav-link active" aria-current="page" id="activepage">
+                        <a href="{% url 'restDashboard' %}" class="nav-link link-dark">
                             <img class="bi me-2" width="16" height="16" src="{% static 'media/home.png' %}">
                             <span style="color:black">Home</span>
                         </a>
@@ -19,19 +20,19 @@
                     <li>
                         <a href="{% url 'restMenu' %}" class="nav-link link-dark">
                             <img class="bi me-2" width="16" height="16" src="{% static 'media/menu.png' %}">
-                            Menu
+                            <span style="color:black">Menu</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'restOrders'%}" class="nav-link link-dark">
+                        <a href="{% url 'restOrders' %}" class="nav-link link-dark">
                             <img class="bi me-2" width="16" height="16" src="{% static 'media/orders.png' %}">
                             <span style="color:black">Orders</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'restPerformance' %}" class="nav-link link-dark">
+                        <a href="#" class="nav-link active" aria-current="page" id="activepage">
                             <img class="bi me-2" width="16" height="16" src="{% static 'media/performance.png' %}">
-                            Performance
+                            <span style="color:black">Performance</span>
                         </a>
                     </li>
                 </ul>
@@ -40,11 +41,15 @@
                     <img width="18" height="18" src="{% static 'media/setting.png' %}">
                 </div>
             </div>
-            <div class="col-9 p-4" style="min-height:93vh;">
-                <h1 style="color:white;">Hello, {% if user.is_authenticated %}{{ restaurant_name }}{% else %}valued Restaurant{% endif %}!</h1>
-                <img src="{% static 'media/star.png' %}" alt="rating_star" style="height:20px"> <span style="color:white"> 4.1</span><br/><br/>
-                <img src="{% static 'media/saleshome.png' %}" style="max-height: 500px; margin-left: 5px">
+            <div class="col">
+                <h1 style="color:white">Revenue Reports</h1>
+                <span style="color:white">Report for Month: May <br>
+                Total Number of Orders: 239 <br>
+                Total Revenue made: $24,653 </span>
+                <br><br>
+                <img src="{% static 'media/revChart.png'%}" style="max-height: 500px; margin-left: 5px">
             </div>
         </div>
     </div>
+
 {% endblock %}
