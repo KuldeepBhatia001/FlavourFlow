@@ -32,6 +32,7 @@ class Restaurant(models.Model):
         return self.name
 
 class Category(models.Model):
+    id=models.AutoField(auto_created=True,primary_key=True, serialize=False, verbose_name='ID')
     name = models.CharField(max_length=255, default='U  ncategorized')
     icon = models.ImageField(upload_to='category_icons/', null=True, blank=True)
 
@@ -39,6 +40,7 @@ class Category(models.Model):
         return self.name
 
 class Item(models.Model):
+    id=models.AutoField(auto_created=True,primary_key=True, serialize=False, verbose_name='ID')
     name = models.CharField(max_length=255)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default="Uncategorized")  # Use the ID of the default category
