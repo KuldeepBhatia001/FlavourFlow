@@ -8,8 +8,8 @@
                     <img src="{% static 'media/getsupport.png'%}" height="14"><span>Get Support</span>
                 </a>
             </li>
-            {% if request.path == '/login/' or request.path == '/restSignup/' or '/%2Flogin/' in request.path %}<li>
-                <a class="nav-link {% if request.path == '/login/' %}active{% endif %} d-flex justify-content-center align-items-center" href="{% url 'rest_login' %}">
+            {% if request.path == '/restlogin/' or request.path == '/restSignup/' or '/%2Flogin/' in request.path %}<li>
+                <a class="nav-link {% if request.path == '/restlogin/' %}active{% endif %} d-flex justify-content-center align-items-center" href="{% url 'rest_login' %}">
                     <img src="{% static 'media/login.png' %}" height="14"><span>Login</span>
                 </a>
             </li>
