@@ -86,7 +86,7 @@ class OrderItem(models.Model):
         return f"{self.quantity} x {self.item.name} in {self.order.order_number}"
 
 class ShoppingCart(models.Model):
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='shopping_cart')
     items = models.ManyToManyField(Item, related_name='carts')
 
