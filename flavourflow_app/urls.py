@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 from django.contrib.auth.views import LogoutView
+from .views import add_to_cart
+
 
 
 urlpatterns = [
@@ -37,6 +39,9 @@ urlpatterns = [
 
 
     path('items/',views.items, name="items"),
+
+    path('add_to_cart/<int:item_id>/', add_to_cart, name='add_to_cart'),
+
     
     path('restaurant/<int:pk>/', views.restaurant_detail, name='restaurant_detail'),
     path('restaurant/menu/<int:restaurant_id>/', views.restaurant_listing, name='restaurant_listing'),

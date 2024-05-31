@@ -23,7 +23,7 @@ def flavourflow_app(request):
 
 
 # ==================================================================
-# ========================= Restraunt side =========================
+# ========================= Restauraunt side =========================
 # ==================================================================
 
 def logout_view(request):
@@ -369,8 +369,23 @@ def item_detail(request, item_id):
     return render(request, 'user/item_detail.html', context)
 
 def items(request):
-    items = Item.objects.all()
-    return render(request, 'user/item_detail.html', {items})
+    food_items = Item.objects.all()
+    return render(request, 'user/dashboard.html', {'food_items': food_items})
+
+
+
+
+@login_required
+def add_to_cart(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    cart, created = ShoppingCart.objects.get_or_create(user=request.user)
+
+    if item not in cart.items.all():
+        cart.items.add(item)
+        cart.total_price += item.price
+        cart.save()
+
+    return redirect('dashboard')  # Redirect to the dashboard or wherever you want
 
 
 def payments(request):

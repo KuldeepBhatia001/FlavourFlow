@@ -30,7 +30,7 @@
     </div>
 
     <div class="add-to-cart mt-4">
-        <button class="btn btn-primary">Add to cart</button>
+        <a href="{% url 'add_to_cart' item.id %}" class="btn btn-primary">Add to Cart</a>
     </div>
 </div>
 {% endblock %}

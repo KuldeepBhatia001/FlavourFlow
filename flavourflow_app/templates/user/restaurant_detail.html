@@ -13,44 +13,24 @@
         <p>{{ restaurant.city }}, {{ restaurant.state }}</p>
     </div>
 
-    <!-- Featured Items -->
-    <div class="featured-items mt-4">
-        <h4>Featured Items</h4>
-        <div class="row">
-            {% for item in featured_items %}
-            <div class="card col-3 m-3">
-                {% if item.image %}
-                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="card-img-top">
-                {% else %}
-                    <img src="{% static 'media/logo_plain.png' %}" alt="{{ item.name }}" class="card-img-top">
-                {% endif %}
-                <div class="card-body text-center">
+    
+    <!-- All Other Items -->
+    <h2>Other Items</h2>
+    <div class="row">
+        {% for item in category_items %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <img src="{% static 'media/logo_plain.png' %}" alt="{{ item.name }}" class="card-img-top">
+                <div class="card-body">
                     <h5 class="card-title">{{ item.name }}</h5>
                     <p class="card-text">${{ item.price }}</p>
+                    <a href="{% url 'add_to_cart' item.id %}" class="btn btn-primary">Add to Cart</a>
+                    <a href="{% url 'item_detail' item.id %}" class="btn btn-secondary">View Item</a>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
 
-    <!-- All Other Items -->
-    <div class="category-items mt-4">
-        <h4>All Items</h4>
-        <div class="row">
-            {% for item in category_items %}
-            <div class="card col-3 m-3">
-                {% if item.image %}
-                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="card-img-top">
-                {% else %}
-                    <img src="{% static 'media/logo_plain.png' %}" alt="{{ item.name }}" class="card-img-top">
-                {% endif %}
-                <div class="card-body text-center">
-                    <h5 class="card-title">{{ item.name }}</h5>
-                    <p class="card-text">${{ item.price }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
 </div>
 {% endblock %}

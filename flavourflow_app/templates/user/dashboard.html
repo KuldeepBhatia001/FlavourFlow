@@ -31,10 +31,11 @@
   <!-- Restaurants -->
   <hr>
   <div class="restaurant-section">
-      <h4>Restaurants</h4>
+      <h4 class="h2">Restaurants</h4>
+      <hr>
       <div class="row m-auto justify-content-center">
         {% for restaurant in restaurants %}
-        <div class="card col-3 m-3">
+        <div class="card col-2 m-3">
             {% if restaurant.logo %}
                 <img src="{{ restaurant.logo.url }}" alt="{{ restaurant.name }}" class="card-img-top d-flex justify-content-center">
             {% else %}
@@ -52,24 +53,25 @@
       </div>
   </div>
 
-
-  <hr>
+    <div class="m-3">&nbsp;</div>
 
   <!-- Food Items -->
   <div class="row m-auto justify-content-center">
+    <h4>Food Items</h4>
+    <hr>
     {% for food_item in food_items %}
     <div class="card col-2 m-3">
-        
         <img src="{% static 'media/logo_plain.png' %}" alt="{{ food_item.name }}" class="card-img-top d-flex justify-content-center">
-        
         <div class="card-body m-auto text-center">
             <h5 class="card-title">{{ food_item.name }}</h5>
             <p class="card-text">${{ food_item.price }}</p>
-            <a href="{% url 'items' %}" class="btn btn-primary bg-primary">View Item</a>
+            <a href="{% url 'add_to_cart' food_item.id %}" class="btn btn-primary bg-primary">Add to Cart</a>
+            <a href="{% url 'item_detail' food_item.id %}" class="btn btn-secondary">View Item</a>
         </div>
     </div>
     {% endfor %}
   </div>
+
 
   <a href="#" class="see-more">see more</a>
 </div>
