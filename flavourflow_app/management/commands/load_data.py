@@ -1,174 +1,192 @@
+import random
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from flavourflow_app.models import Customer, Restaurant, Item, Order, OrderItem, ShoppingCart, Transaction, Analytics, Menu, Favorite, Delivery, Category
-from faker import Faker
-import random
-from datetime import datetime, timedelta
+from flavourflow_app.models import *
+
+
+# Sample arrays for generating random data
+first_names = ["John", "Jane", "Alice", "Bob", "Charlie", "Diana"]
+last_names = ["Doe", "Smith", "Johnson", "Williams", "Brown", "Jones"]
+streets = ["Main St", "High St", "Park Ave", "Broadway", "Sunset Blvd", "Maple St"]
+cities = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia"]
+states = ["NY", "CA", "IL", "TX", "AZ", "PA"]
+categories = ["Fast Food", "Italian", "Chinese", "Mexican", "Indian", "Japanese"]
+restaurant_names = ["The Great Eatery", "Food Paradise", "Taste of Heaven", "Gourmet Delight", "Food Fiesta", "Culinary Haven"]
+item_names = ["Burger", "Pizza", "Sushi", "Tacos", "Pasta", "Salad"]
+delivery_options = ["standard", "priority"]
+
+def random_phone():
+    return ''.join(random.choices('0123456789', k=10))
+
+def random_postcode():
+    return ''.join(random.choices('0123456789', k=4))
+
+def random_abn():
+    return ''.join(random.choices('0123456789', k=11))
+
+def generate_unique_username(base):
+    username = base
+    counter = 1
+    while User.objects.filter(username=username).exists():
+        username = f"{base}{counter}"
+        counter += 1
+    return username
 
 class Command(BaseCommand):
-    help = 'Load sample data into the database'
+    help = 'Populate the database with random data'
 
     def handle(self, *args, **kwargs):
-        faker = Faker()
 
         # Clear existing data
-        Customer.objects.all().delete()
-        Restaurant.objects.all().delete()
-        Item.objects.all().delete()
-        Order.objects.all().delete()
-        OrderItem.objects.all().delete()
-        ShoppingCart.objects.all().delete()
-        Transaction.objects.all().delete()
-        Analytics.objects.all().delete()
-        Menu.objects.all().delete()
-        Favorite.objects.all().delete()
         Delivery.objects.all().delete()
+        Menu.objects.all().delete()
+        Analytics.objects.all().delete()
+        Transaction.objects.all().delete()
+        ShoppingCart.objects.all().delete()
+        OrderItem.objects.all().delete()
+        Order.objects.all().delete()
+        Item.objects.all().delete()
         Category.objects.all().delete()
-        User.objects.all().exclude(is_superuser=True).delete()
+        Restaurant.objects.all().delete()
+        Customer.objects.all().delete()
+        User.objects.filter(is_superuser=False).delete()
 
-        # Create default category
-        default_category, created = Category.objects.get_or_create(
-            name='Uncategorized'
-        )
+        # Create users
+        for _ in range(10):
+            base_username = f'user{random.randint(1, 1000)}'
+            username = generate_unique_username(base_username)
+            email = f'{username}@example.com'
+            password = 'password123'
+            user = User.objects.create_user(username=username, email=email, password=password)
+            first_name = random.choice(first_names)
+            last_name = random.choice(last_names)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
 
-        # Create Users and Customers
-        for _ in range(5):
-            user = User.objects.create_user(
-                username=faker.user_name(),
-                email=faker.email(),
-                password='password123'
-            )
+            # Create customer
             Customer.objects.create(
                 user=user,
-                phone=faker.phone_number(),
-                payment_method=faker.credit_card_provider(),
-                is_member=faker.boolean(),
-                street=faker.street_address(),
-                city=faker.city(),
-                state=faker.state(),
-                postcode=faker.postcode()
+                name=f'{first_name} {last_name}',
+                phone=random_phone(),
+                street=random.choice(streets),
+                city=random.choice(cities),
+                state=random.choice(states),
+                postcode=random_postcode()
             )
 
-        # Create Users and Restaurants
-        for _ in range(10):
-            user = User.objects.create_user(
-                username=faker.user_name(),
-                email=faker.email(),
-                password='password123'
-            )
+        # Create categories
+        for category in categories:
+            Category.objects.create(name=category)
+
+        # Create restaurants
+        for _ in range(20):
+            base_username = f'restaurant{random.randint(1, 1000)}'
+            username = generate_unique_username(base_username)
+            email = f'{username}@example.com'
+            password = 'password123'
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user.save()
+
             Restaurant.objects.create(
                 user=user,
-                name=faker.company(),
-                phone=faker.phone_number(),
-                abn=faker.ean(length=13),
-                category=faker.word(),
-                logo='restaurant_logo/sample_logo.jpg',
-                street=faker.street_address(),
-                city=faker.city(),
-                state=faker.state(),
-                postcode=faker.postcode()
+                name=random.choice(restaurant_names),
+                phone=random_phone(),
+                abn=random_abn(),
+                category=random.choice(categories),
+                street=random.choice(streets),
+                city=random.choice(cities),
+                state=random.choice(states),
+                postcode=random_postcode()
             )
 
-        customers = list(Customer.objects.all())
-        restaurants = list(Restaurant.objects.all())
+        # Create items
+        restaurants = Restaurant.objects.all()
+        for restaurant in restaurants:
+            for _ in range(10):
+                item_name = random.choice(item_names)
+                category = random.choice(Category.objects.all())
+                Item.objects.create(
+                    name=item_name,
+                    restaurant=restaurant,
+                    category=category,
+                    price=round(random.uniform(5.0, 50.0), 2)
+                )
 
-        # Create Items
-        for _ in range(50):
-            Item.objects.create(
-                name=faker.word(),
-                restaurant=random.choice(restaurants),
-                category=default_category,  # Use the default category
-                price=faker.pydecimal(left_digits=2, right_digits=2, positive=True),
-                image='meal_images/sample_image.jpg',
-                is_available=faker.boolean()
-            )
-
-        items = list(Item.objects.all())
-
-        # Create Orders and OrderItems
-        for _ in range(20):
-            customer = random.choice(customers)
+        # Create orders
+        customers = Customer.objects.all()
+        for customer in customers:
             restaurant = random.choice(restaurants)
             order = Order.objects.create(
                 customer=customer.user,
                 restaurant=restaurant,
-                status=random.choice(['pending', 'completed', 'cancelled']),
-                total_price=faker.pydecimal(left_digits=2, right_digits=2, positive=True),
-                cust_rating=random.uniform(0, 5),
-                delivery=faker.boolean()
+                total_price=round(random.uniform(20.0, 100.0), 2),
+                delivery=random.choice([True, False])
             )
-            for _ in range(random.randint(1, 5)):
+            items = random.sample(list(Item.objects.filter(restaurant=restaurant)), k=3)
+            for item in items:
                 OrderItem.objects.create(
                     order=order,
-                    item=random.choice(items),
+                    item=item,
                     quantity=random.randint(1, 5)
                 )
 
-        # Create Shopping Carts
+        # Create shopping carts
         for customer in customers:
-            cart = ShoppingCart.objects.create(
-                user=customer.user,
-                total_price=faker.pydecimal(left_digits=2, right_digits=2, positive=True)
-            )
-            for _ in range(random.randint(1, 5)):
-                cart.items.add(random.choice(items))
+            if not ShoppingCart.objects.filter(user=customer.user).exists():
+                shopping_cart = ShoppingCart.objects.create(
+                    user=customer.user,
+                    total_price=round(random.uniform(20.0, 100.0), 2)
+                )
+                items = random.sample(list(Item.objects.all()), k=5)
+                shopping_cart.items.set(items)
+                shopping_cart.save()
 
-        # Create Transactions
+        # Create transactions
         for order in Order.objects.all():
-            Transaction.objects.create(
-                order=order,
-                amount=order.total_price,
-                payment_method=order.customer.customer,
-                payment_status=random.choice(['pending', 'success', 'failed'])
-            )
+            if not Transaction.objects.filter(order=order).exists():
+                Transaction.objects.create(
+                    order=order,
+                    amount=order.total_price,
+                    payment_status=random.choice(['pending', 'success', 'failed'])
+                )
 
-        # Create Analytics
+        # Create analytics
         for restaurant in restaurants:
-            seen_months = set()
-            for _ in range(12):  # 12 months
-                month = faker.date_this_year(before_today=True, after_today=False)
-                while month in seen_months:
-                    month = faker.date_this_year(before_today=True, after_today=False)
-                seen_months.add(month)
-                Analytics.objects.create(
+            for _ in range(12):  # One entry per month for the last year
+                month = random.choice(range(1, 13))
+                year = random.choice(range(2021, 2023))
+                date = f'{year}-{month:02d}-01'
+                if not Analytics.objects.filter(restaurant=restaurant, month=date).exists():
+                    Analytics.objects.create(
+                        restaurant=restaurant,
+                        month=date,
+                        rating=round(random.uniform(0.0, 5.0), 2),
+                        cust_views=random.randint(0, 500),
+                        avg_ticket=round(random.uniform(10.0, 50.0), 2),
+                        total_sales=random.randint(0, 1000)
+                    )
+
+        # Create menus
+        for restaurant in restaurants:
+            for _ in range(3):
+                menu = Menu.objects.create(
                     restaurant=restaurant,
-                    month=month,
-                    rating=random.uniform(0, 5),
-                    cust_views=faker.random_int(min=0, max=500),
-                    avg_ticket=faker.pydecimal(left_digits=2, right_digits=2, positive=True),
-                    total_sales=faker.random_int(min=0, max=500)
+                    name=f"Menu {_+1}",
+                    description="A delicious selection of items",
+                    is_active=random.choice([True, False])
                 )
+                items = random.sample(list(Item.objects.filter(restaurant=restaurant)), k=5)
+                menu.items.set(items)
+                menu.save()
 
-        # Create Menus and add Items
-        for restaurant in restaurants:
-            menu = Menu.objects.create(
-                restaurant=restaurant,
-                name=faker.word(),
-                description=faker.text(),
-                is_active=faker.boolean()
-            )
-            for _ in range(random.randint(1, 10)):
-                menu.items.add(random.choice(items))
-
-        # Create Favorites
+        # Create deliveries
         for customer in customers:
-            favorite_items = set()
-            for _ in range(random.randint(1, 5)):
-                item = random.choice(items)
-                while (customer.id, item.id) in favorite_items:
-                    item = random.choice(items)
-                favorite_items.add((customer.id, item.id))
-                Favorite.objects.create(
-                    customer=customer,
-                    item=item
+            for _ in range(3):
+                Delivery.objects.create(
+                    user=customer.user,
+                    delivery_location=random.choice(streets),
+                    delivery_option=random.choice(delivery_options)
                 )
 
-        # Create Deliveries
-        for _ in range(20):
-            Delivery.objects.create(
-                user=random.choice(User.objects.all()),
-                delivery_location=faker.address(),
-                delivery_option=random.choice(['standard', 'priority'])
-            )
-
-        self.stdout.write(self.style.SUCCESS('Sample data loaded successfully'))
+        self.stdout.write(self.style.SUCCESS('Successfully populated the database with random data'))
