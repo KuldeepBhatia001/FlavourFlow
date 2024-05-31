@@ -1,11 +1,13 @@
+from django.contrib import admin
 from django.urls import path
 from . import views
 from django.contrib.auth.views import LogoutView
-from .views import add_to_cart
+from .views import add_to_cart, RestLoginView, get_menu_items
 
 
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('', views.flavourflow_app, name='flavourflow_app'),
 
     path('signup/', views.signup_view, name='userSignup'),
@@ -20,9 +22,14 @@ urlpatterns = [
     # path('userSignin', views.userSignin, name='userSignin'),
     # path('userSignup', views.userSignup, name='userSignup'),
     path('restSignup/', views.restSignup_view, name='restSignup'),
-    path('login/', views.login, name='login'),
+    path('restlogin/', RestLoginView.as_view(), name='rest_login'),
     path('restDashboard/', views.restDashboard, name='restDashboard'),
-    
+    path('restdashboard/orders', views.restOrders, name='restOrders'),
+    path('restdashboard/menu', views.restMenu, name='restMenu'),
+    path('restdashboard/get_menu_items/', get_menu_items, name='get_menu_items'),
+    path('edit_menu/', views.edit_menu, name='edit_menu'),
+    path('restdashboard/performance', views.restPerformance, name='restPerformance'),
+
     path('membership/', views.membership, name='membership'),
     path('payments/', views.payments, name='payments'),
     path('checkoutOrder/', views.checkoutOrder, name='checkoutOrder'),
@@ -52,8 +59,10 @@ urlpatterns = [
     path('cart/', views.cart, name='cart'),
     path('update-cart/<int:item_id>/', views.update_cart, name='update_cart'),
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
-
-
+    path('logout/', views.logout_view, name='logout'),
+    path('accept_order/<int:order_id>/', views.accept_order, name='accept_order'),
+    path('reject_order/<int:order_id>/', views.reject_order, name='reject_order'),
+    path('update_order_status/<int:order_id>/', views.update_order_status, name='update_order_status'),
 
 
 ]
