@@ -20,6 +20,11 @@
           <a class="nav-link d-flex align-items-center" href="{% url 'history' %}"><i class="nav-icon fas fa-history"></i>History</a>
           <a class="nav-link d-flex align-items-center" href="{% url 'settings' %}"><i class="nav-icon fas fa-cog"></i>Settings</a>
           <a class="nav-link d-flex align-items-center" href="{% url 'cart' %}"><i class="nav-icon fas fa-shopping-cart"></i>Shopping Cart</a>
+
+          <form action="{% url 'userLogout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-info">Logout</button>
+          </form>
         </div>
       </div>
     </div>

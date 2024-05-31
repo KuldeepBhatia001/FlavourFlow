@@ -6,7 +6,6 @@ class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer')
     name = models.CharField(max_length=500, default="John")
     phone = models.CharField(max_length=10)
-    payment_method = models.CharField(max_length=50)
     is_member = models.BooleanField(default=False)
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
@@ -97,7 +96,6 @@ class ShoppingCart(models.Model):
 class Transaction(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_method = models.ForeignKey(Customer, on_delete=models.CASCADE)
     PAYMENT_STATUS_CHOICES = (
         ('pending', 'Pending'),
         ('success', 'Success'),

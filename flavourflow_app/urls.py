@@ -1,15 +1,15 @@
 from django.urls import path
 from . import views
+from django.contrib.auth.views import LogoutView
 
-from .views import *
 
 urlpatterns = [
     path('', views.flavourflow_app, name='flavourflow_app'),
 
-    path('signup/', views.user_signup, name='userSignup'),
-    path('signin/', views.user_signin, name='userSignin'),
+    path('signup/', views.signup_view, name='userSignup'),
+    path('login/', views.login_view, name='userSignin'),
+    path('logout/', LogoutView.as_view(next_page='userSignin'), name='userLogout'),
 
-    path('signout/', views.user_signout, name='userSignout'),
 
 
     path('dashboard/', views.user_dashboard, name='user_dashboard'),

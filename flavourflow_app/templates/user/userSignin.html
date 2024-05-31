@@ -17,12 +17,20 @@
     <div class="block">
         <form class="login-form" method="post" action="{% url 'userSignin' %}">
             {% csrf_token %}
-            <h2>Sign-in</h2>
+            <h2 class="h1 text-white">Sign-in</h2>
+            {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             {{ form.as_p }}
             <p><a href="#" style="color: darkorange;">Forgot password?</a></p>
             <button type="submit">Login</button>
         </form>
-        <p>Not a member? <a href="{% url 'userSignup' %}">Register now</a></p>
+        <p class="text-white">Not a member? <a href="{% url 'userSignup' %}">Register now</a></p>
     </div>
 </div>
 {% endblock %}

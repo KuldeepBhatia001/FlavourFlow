@@ -1,28 +1,30 @@
-from django.db import IntegrityError
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
-from .forms import *
-from .models import *
-from django.http import JsonResponse
-from django.db.models import Count, F
 from decimal import Decimal
-from django.contrib import messages, auth
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.shortcuts import render, redirect, get_object_or_404
+
+from django.contrib import auth, messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
+from django.db.models import Count, Sum
 from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.db.models import Sum
 from django.utils import timezone
-from .forms import *
-from .models import *
-from django.contrib.auth import authenticate,login,logout
 from django.views import View
 
+from .forms import *
+from .models import *
+
+
+
+def flavourflow_app(request):
+    return render(request, 'index.html')
+
+
+# ==================================================================
+# ========================= Restraunt side =========================
+# ==================================================================
 
 def logout_view(request):
     logout(request)
@@ -162,7 +164,41 @@ class RestLoginView(View):
 
 
 
+# =============================================================
+# ========================= User side =========================
+# =============================================================
 
+def signup_view(request):
+    if request.method == 'POST':
+        form = CustomerSignupForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('userSignin')  # Change 'home' to the name of your home page view
+    else:
+        form = CustomerSignupForm()
+    return render(request, 'user/userSignup.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('user_dashboard')
+            else:
+                messages.error(request, 'Invalid username or password.')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'user/userSignin.html', {'form': form})
+
+
+"""
 def user_signup(request):
     if request.method == 'POST':
         form = CustomerSignUpForm(request.POST)
@@ -205,7 +241,7 @@ def user_signin(request):
         form = AuthenticationForm()
     return render(request, 'user/userSignin.html', {'form': form})
 
-
+"""
 
 def user_signout(request):
     logout(request)
@@ -241,66 +277,6 @@ def user_dashboard(request):
 
 
 
-"""
-def userSignin(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.success(request, f'Welcome {username}!')
-                return redirect('dashboard/')
-            else:
-                messages.error(request, 'Invalid username or password.')
-        else:
-            messages.error(request, 'Invalid username or password.')
-    else:
-        form = AuthenticationForm()
-
-    return render(request, "user/userSignin.html", {'form': form})
-
-def userSignup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request)
-            messages.success(request, 'Registration successful')
-            return redirect('userSignin')  # Redirect to home or another appropriate page
-        else:
-            messages.error(request, 'Please correct the error below.')
-    else:
-        form = SignUpForm()
-
-    return render(request, 'userSignup.html', {'form': form})
-
-
-# def login(request):
-#     return render(request, "registration/login.html")
-
-
-@login_required
-def user_dashboard(request):
-    customer=Customer.objects.get(user=request.user)
-    delivery_address = f"{customer.street}, {customer.city}, {customer.state}, {customer.postcode}" if customer.street else "No address specified"
-    categories = Category.objects.all()
-    food_items = Item.objects.all()
-    favorites = Favorite.objects.filter(customer=customer)
-
-    context = {
-        'customer': customer,
-        'delivery_address': delivery_address,
-        'categories': categories,
-        'food_items': food_items,
-        'favorites': favorites
-    }
-    return render(request, 'user/dashboard.html', context)
-
-"""
-
 
 def restSignup_view(request):
     if request.method == "POST":
@@ -316,9 +292,6 @@ def restSignup_view(request):
 def restDashboard(request):
     return render(request, "restDashboard.html")
 
-
-def flavourflow_app(request):
-    return render(request, 'index.html')
 
 
 
@@ -361,9 +334,6 @@ def history(request):
     }
     return render(request, 'user/history.html', context)
 
-def settings(request):
-    return render(request, 'user/settings.html')
-
 
 def membership(request):
     return render(request, 'membership.html')
@@ -402,22 +372,6 @@ def items(request):
     items = Item.objects.all()
     return render(request, 'user/item_detail.html', {items})
 
-
-"""
-def restaurant_listing(request, restaurant_id):
-    restaurant = get_object_or_404(Restaurant, id=restaurant_id)
-    items = Item.objects.filter(restaurant=restaurant)
-    categories = Category.objects.all()
-    categorized_items = {category: items.filter(category=category) for category in categories}
-    featured_items = items[:3]  # Assuming the first 3 items are featured for simplicity
-
-    context = {
-        'restaurant': restaurant,
-        'categorized_items': categorized_items,
-        'featured_items': featured_items,
-    }
-    return render(request, 'user/restaurant_listing.html', context)
-"""
 
 def payments(request):
     if request.method == 'POST':
@@ -501,6 +455,9 @@ def settings(request):
     }
     return render(request, 'settings.html', context)
 
+
+# Cart views
+
 @login_required
 def cart(request):
     try:
@@ -576,3 +533,4 @@ def remove_from_cart(request, item_id):
 
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
+# .Cart views

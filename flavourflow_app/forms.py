@@ -32,23 +32,31 @@ class RestRegisterForm(UserCreationForm):
         fields = ('email','password1','password2','name','location','category','phone')
 
 
-class CustomerSignUpForm(UserCreationForm):
-    name = forms.CharField(max_length=500, required=True)
-    phone = forms.CharField(max_length=10, required=True)
-    payment_method = forms.CharField(max_length=50, required=True)
-    street = forms.CharField(max_length=255, required=True)
-    city = forms.CharField(max_length=255, required=True)
-    state = forms.CharField(max_length=50, required=True)
-    postcode = forms.CharField(max_length=4, required=True)
+class CustomerSignupForm(UserCreationForm):
+    name = forms.CharField(max_length=500)
+    phone = forms.CharField(max_length=10)
+    street = forms.CharField(max_length=255)
+    city = forms.CharField(max_length=255)
+    state = forms.CharField(max_length=50)
+    postcode = forms.CharField(max_length=4)
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2', 'name', 'phone', 'payment_method', 'street', 'city', 'state', 'postcode')
+        fields = ['username', 'email', 'password1', 'password2']
 
     def save(self, commit=True):
         user = super().save(commit=False)
         if commit:
             user.save()
+        customer = Customer.objects.create(
+            user=user,
+            name=self.cleaned_data['name'],
+            phone=self.cleaned_data['phone'],
+            street=self.cleaned_data['street'],
+            city=self.cleaned_data['city'],
+            state=self.cleaned_data['state'],
+            postcode=self.cleaned_data['postcode'],
+        )
         return user
 
 

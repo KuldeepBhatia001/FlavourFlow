@@ -1,24 +1,27 @@
 {% extends 'base_old.html' %}
 {% load static %}
 
-{% block title %}UserSignup{% endblock %}
+
+{% block title %}User Signup{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
 {% endblock %}
 
+{% include 'navbar.html' %}
 {% block content %}
-<div class="container">
-    <div class="top-block">
+
+<div class="container text-white mt-2">
+    <div class="top-block d-flex justify-content-center">
         <div class="logo">
             <img src="{% static 'media/Logo.png' %}" alt="Logo">
         </div>
     </div>
-    <div class="block">
+    <div class="block col-6 m-auto">
         <form class="login-form" method="post">
             {% csrf_token %}
-            <h2>Sign-up</h2>
-            <h6>Create an account to get started</h6>
+            <h2 class="h1 font-weight-bolder">Sign-up</h2>
+            <h4 class="h4">Create an account to get started!</h4>
             {% if messages %}
                 <div class="alert alert-danger">
                     {% for message in messages %}
@@ -26,14 +29,32 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            {{ form.as_p }}
+            {% for field in form %}
+                {% if field.name == "street" %}
+                    <h6 class="h3">Address</h6>
+                    <hr>
+                {% endif %}
+                {% if field.name == "name" %}
+                    <h6 class="h3">Personal Details</h6>
+                    <hr>
+                {% endif %}
+                <div class="form-group">
+                    {{ field.label_tag }} {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-text text-white">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
             <div class="block">
                 <input type="checkbox" id="agree" name="agree" required>
                 <label for="agree">I've read and agree with the <a href="#">Terms and Conditions</a> and the <a href="#">Privacy Policy</a></label>
             </div>
             <button type="submit">Sign-up</button>
         </form>
-        <p>Are a member? <a href="{% url 'userSignin' %}">Sign in</a></p>
+        <p>Already a member? <a href="{% url 'userSignin' %}">Sign in</a></p>
     </div>
 </div>
 {% endblock %}
